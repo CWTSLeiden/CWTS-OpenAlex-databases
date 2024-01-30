@@ -1,0 +1,3 @@
+[submodule "etl-tooling"]
+	path = etl-tooling
+	url = git@github.com:CWTSLeiden/CWTS-ETL-tooling.git
