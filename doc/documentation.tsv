@@ -1,0 +1,391 @@
+table_name	column_name	description_type	description	notes
+		database	OpenAlex is a free and open database of scholary papers, journals, researchers, and institutions along with all the ways they are connected. It is made by the nonprofit OurResearch. For more information, see https://openalex.org.<br><br>The CWTS version of the OpenAlex database is based on the OpenAlex snapshot in native format. Loading the snapshot directly into a relation database is not possible and therefore some transformations were needed to make. However, with the CWTS relational model of OpenAlex we tried to stay as close as possible to the native format of OpenAlex. In addition to this document, the documentation on the OpenAlex entities available at https://docs.openalex.org/api-entities/entities-overview should therefore provide a good description of the tables and columns in the CWTS version of the OpenAlex database.<br><br>License: CC0, https://creativecommons.org/publicdomain/zero/1.0.	
+apc_provenance		table	Each row in this table represents a source from which APC provenance data is taken (e.g., 'doaj' or 'openapc').	
+apc_provenance	apc_provenance_id	column	CWTS APC provenance data source identifier.	
+apc_provenance	apc_provenance	column	APC provenance data source.	
+author		table	Each row in this table represents an author. For more information, see https://docs.openalex.org/api-entities/authors.	
+author	author_id	column	OpenAlex author identifier (prefix with 'https://openalex.com/A' to get the full identifier).	
+author	author	column	Full name of the author.	
+author	last_known_institution_id	column	Last known institution affiliation of the author. See [institution] table.	
+author	orcid	column	ORCID author identifier. See ORCID database.	
+author	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+author	scopus_id	column	Scopus author identifier.	
+author	wikipedia_url	column	URL of the Wikipedia page of the author.	
+author	updated_date	column	The date and time anything in the corresponding OpenAlex author record was last changed.	
+author	created_date	column	The date the author was introduced in the OpenAlex dataset.	
+author_alternative_name		table	Each row in this table represents an alternative to the name of an author.	
+author_alternative_name	author_id	column	OpenAlex author identifier. See [author] table.	
+author_alternative_name	alternative_name_seq	column	Alternative name sequence number.	
+author_alternative_name	alternative_name	column	An alternative to the name of the author.	
+author_position		table	Each row in this table represents the position that an author can have in the author list (i.e., 'first', 'middle', or 'last').	
+author_position	author_position_id	column	CWTS author position identifier.	
+author_position	author_position	column	Author position.	
+citation		table	Each row in this table represents a citation.	
+citation	citing_work_id	column	OpenAlex work identifier of the citing work. See [work] table.	
+citation	reference_seq	column	Citation sequence number.	
+citation	cited_work_id	column	OpenAlex work identifier of the cited work. See [work] table.	
+citation	pub_year	column	Publication year of the cited work.	
+citation	cit_window	column	Citation window in years. Calculated by subtracting the publication year of the cited work from the publication year of the citing work.	
+citation	is_self_cit	column	Citation is an author self-citation (0 = no, 1 = yes). A citation is regarded as an author self-citation if the citing and the cited publication have at least one author name in common.	
+city		table	Each row in this table represents a city.	
+city	geonames_city_id	column	GeoNames city identifier. See GeoNames database.	
+city	city	column	City name.	
+concept		table	Each row in this table represents a concept. A concept is an abstract idea that a work is about. For more information, see https://docs.openalex.org/api-entities/concepts.	
+concept	concept_id	column	OpenAlex concept identifier (prefix with 'https://openalex.com/C' to get the full identifier).	
+concept	concept	column	Concept name.	
+concept	description	column	Concept description.	
+concept	level	column	Concept hierarchy level. Concepts are organized hierarchically in a tree. There are 19 root-level concepts, and six levels of descendents branching out from them.	
+concept	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+concept	mag_id	column	Microsoft Academic Graph (MAG) concept identifier.	
+concept	wikidata_id	column	Wikidata concept identifier. For more information, see https://www.wikidata.org.	
+concept	wikipedia_url	column	Wikipedia page URL of the concept.	
+concept	image_url	column	URL of an image representing this concept.	
+concept	thumbnail_url	column	URL of a smaller version of the image at [image_url].	
+concept	updated_date	column	The date and time anything in the corresponding OpenAlex concept record was last changed.	
+concept	created_date	column	The date the concept was introduced in the OpenAlex dataset.	
+concept_ancestor		table	Each row in this table represents the relation of a concept with its ancestor concept.	
+concept_ancestor	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_ancestor	ancestor_concept_seq	column	Ancestor concept sequence number.	
+concept_ancestor	ancestor_concept_id	column	OpenAlex concept identifier of the ancestor concept. See [concept] table.	
+concept_international_description		table	Each row in this table represents the translation of the description of a concept in a specific language.	
+concept_international_description	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_international_description	language_code	column	Wikidata language code. For the full list of languages, see https://doc.wikimedia.org/mediawiki-core/master/php/Names_8php_source.html.	
+concept_international_description	concept_international_description	column	Translated description of the concept.	
+concept_international_name		table	Each row in this table represents the translation of the name of a concept in a specific language.	
+concept_international_name	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_international_name	language_code	column	Wikidata language code. For the full list of languages, see https://doc.wikimedia.org/mediawiki-core/master/php/Names_8php_source.html.	
+concept_international_name	concept_international_name	column	Translated name of the concept.	
+concept_related		table	Each row in this table represents the relation of a concept to a similar concept.	
+concept_related	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_related	related_concept_seq	column	Related concept sequence number.	
+concept_related	related_concept_id	column	OpenAlex concept identifier of the related concept. See [concept] table.	
+concept_related	score	column	The strength of the association between the concept and the related concept, from 0 to 100 (higher is stronger).	
+concept_umls_aui		table	Each row in this table represents a Unified Medical Language System Atom Unique Identifier for a concept. For more information, see https://www.nlm.nih.gov/research/umls/new_users/online_learning/Meta_005.html.	
+concept_umls_aui	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_umls_aui	umls_aui_seq	column	Unified Medical Language System Atom Unique Identifier sequence number.	
+concept_umls_aui	umls_aui	column	Unified Medical Language System Atom Unique Identifier.	
+concept_umls_cui		table	Each row in this table represents a Unified Medical Language System Concept Unique Identifier for a concept. For more information, see https://www.nlm.nih.gov/research/umls/new_users/online_learning/Meta_005.html.	
+concept_umls_cui	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+concept_umls_cui	umls_cui_seq	column	Unified Medical Language System Concept Unique Identifier sequence number.	
+concept_umls_cui	umls_cui	column	Unified Medical Language System Concept Unique Identifier.	
+country		table	Each row in this table represents a country.	
+country	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country.	
+country	country	column	Country name.	
+doi_registration_agency		table	Each row in this table represents a DOI registration agency.	
+doi_registration_agency	doi_registration_agency_id	column	CWTS DOI registration agency identifier.	
+doi_registration_agency	doi_registration_agency	column	Registration agency.	
+fulltext_origin		table	Each row in this table represents a source used for the full text search  (e.g., 'pdf', 'ngrams').	
+fulltext_origin	fulltext_origin_id	column	CWTS full text origin identifer.	
+fulltext_origin	fulltext_origin	column	Full text origin.	
+funder		table	Each row in this table represents funder, see https://docs.openalex.org/api-entities/funders.	
+funder	funder_id	column	OpenAlex funder identifier (prefix with 'https://openalex.com/F' to get the full identifier).	
+funder	funder	column	Funder name.	
+funder	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country where the funder is situated. See [country] table.	
+funder	description	column	Description of the funder.	
+funder	homepage_url	column	Homepage URL of the funder (taken from Wikidata).	
+funder	ror_id	column	ROR organization identifier. See ROR database.	
+funder	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+funder	wikidata_id	column	Wikidata funder identifier. For more information, see https://www.wikidata.org.	
+funder	image_url	column	URL of an image representing the funder.	
+funder	thumbnail_url	column	URL of a smaller version of the image at [image_url].	
+funder	updated_date	column	The date and time anything in the corresponding OpenAlex funder record was last changed.	
+funder	created_date	column	The date the funder was introduced in the OpenAlex dataset.	
+funder_alternative_name		table	Each row in this table represents an alternative to the name of a funder.	
+funder_alternative_name	funder_id	column	OpenAlex funder identifier. See [funder] table.	
+funder_alternative_name	alternative_name_seq	column	Alternative name sequence number.	
+funder_alternative_name	alternative_name	column	An alternative to the name of the funder.	
+funder_publisher		table	This table links funders to publishers.	
+funder_publisher	funder_id	column	OpenAlex funder identifier. See [funder] table.	
+funder_publisher	publisher_seq	column	Publisher sequence number.	
+funder_publisher	publisher_id	column	OpenAlex publisher identifier. See [publisher] table.	
+institution		table	Each row in this table represents an organization to which authors claim affiliations. For more information, see https://docs.openalex.org/api-entities/institutions.	
+institution	institution_id	column	OpenAlex institution identifier (prefix with 'https://openalex.com/I' to get the full identifier).	
+institution	institution	column	Institution name.	
+institution	institution_type_id	column	CWTS institution type identifier. See [institution_type] table.	
+institution	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country where the institution is situated. See [country] table.	
+institution	region_id	column	CWTS region identifier of the region where the institution is situated. See [region] table.	
+institution	geonames_city_id	column	GeoNames city identifier of the region where the institution is situated. See [city] table.	
+institution	latitude	column	Latitude of the institution.	
+institution	longitude	column	Longitude of the institution.	
+institution	homepage_url	column	Homepage URL of the institution.	
+institution	ror_id	column	ROR organization identifier. See ROR database.	
+institution	grid_id	column	GRID organization identifier. See GRID database.	
+institution	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+institution	mag_id	column	Microsoft Academic Graph (MAG) institution identifier.	
+institution	wikidata_id	column	Wikidata institution identifier. For more information, see https://www.wikidata.org.	
+institution	wikipedia_url	column	Wikipedia page URL of the institution.	
+institution	image_url	column	URL of an image representing the institution.	
+institution	thumbnail_url	column	URL of a smaller version of the image at [image_url].	
+institution	updated_date	column	The date and time anything in the corresponding OpenAlex institution record was last changed.	
+institution	created_date	column	The date the institution was introduced in the OpenAlex dataset.	
+institution_acronym		table	Each row in this table represents an acronym of an institution.	
+institution_acronym	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_acronym	acronym_seq	column	Acronym sequence number.	
+institution_acronym	acronym	column	Acronym of the institution.	
+institution_alternative_name		table	Each row in this table represents an alternative to the name of an institution.	
+institution_alternative_name	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_alternative_name	alternative_name_seq	column	Alternative name sequence number.	
+institution_alternative_name	alternative_name	column	An alternative to the name of the institution.	
+institution_associated		table	Each row in this table represents the relation between an institution and an associated institution.	
+institution_associated	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_associated	associated_institution_seq	column	Associated institution sequence number.	
+institution_associated	associated_institution_id	column	OpenAlex institution identifier of the associated institution. See [institution] table.	
+institution_associated	institution_relationship_type_id	column	CWTS institution relationship type identifier. See [institution_relationship_type] table.	
+institution_funder		table	This table links institutions to funders.	
+institution_funder	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_funder	funder_seq	column	Funder sequence number.	
+institution_funder	funder_id	column	OpenAlex funder identifier. See [funder] table.	
+institution_international_name		table	Each row in this table represents the translation of the name of an institution in a specific language.	
+institution_international_name	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_international_name	language_code	column	Wikidata language code. For the full list of languages, see https://doc.wikimedia.org/mediawiki-core/master/php/Names_8php_source.html.	
+institution_international_name	institution_international_name	column	Translated name of the institution.	
+institution_lineage		table	Each row in this table respresents a parent institutions of an institution. Each institution is also included itself as a parent institution.	
+institution_lineage	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_lineage	lineage_institution_seq	column	Lineage institution sequence number.	
+institution_lineage	lineage_institution_id	column	OpenAlex institution identifier of the lineage institution. See [institution] table.	
+institution_name		table	Each row in this table represents the name of an institution.	
+institution_name	institution_name_id	column	CWTS institution name identifier.	
+institution_name	institution_name	column	Institution name.	
+institution_publisher		table	This table links institutions to publishers.	
+institution_publisher	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_publisher	publisher_seq	column	Publisher sequence number.	
+institution_publisher	publisher_id	column	OpenAlex publisher identifier. See [publisher] table.	
+institution_relationship_type		table	Each row in this table represents a relationship that can occur between two institutions (e.g., 'child', 'parent', 'related',  'other').	
+institution_relationship_type	institution_relationship_type_id	column	CWTS institution relationship type identifier.	
+institution_relationship_type	institution_relationship_type	column	Institution relationship type.	
+institution_repository		table	This table links institutions to repositories.	
+institution_repository	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+institution_repository	repository_seq	column	Repository sequence number.	
+institution_repository	repository_source_id	column	OpenAlex source identifier of the repository. See [source] table.	
+institution_type		table	Each row in this table represents a type of institution (e.g., 'education', 'healthcare', 'company', 'archive', 'nonprofit', 'government', 'facility', 'other'). For more information see https://ror.readme.io/docs/ror-data-structure.	
+institution_type	institution_type_id	column	CWTS institution type identifier.	
+institution_type	institution_type	column	Institution type from the ROR type controlled vocabulary.	
+keyword		table	Each row in this table represents a keyword.	
+keyword	keyword_id	column	CWTS keyword identifier.	
+keyword	keyword	column	Keyword.	
+license		table	Each row in this table represents a license that can apply to a work hosted at a location (e.g., 'cc0', 'publisher-specific license', 'cc-by-sa', etc.).	
+license	license_id	column	CWTS license identifier.	
+license	license	column	License name.	
+mesh_descriptor		table	Each row in this table represents a descriptor from the Medical Subject Headings (MeSH) thesaurus. For more information, see https://www.nlm.nih.gov/mesh/concept_structure.html.	
+mesh_descriptor	mesh_descriptor_ui	column	MeSH descriptor identifier.	
+mesh_descriptor	mesh_descriptor	column	MeSH descriptor.	
+mesh_qualifier		table	Each row in this table represents a qualifier from the Medical Subject Headings (MeSH) thesaurus. Qualifiers afford a convenient means of grouping particular aspect of a subject of the publication.	
+mesh_qualifier	mesh_qualifier_ui	column	MeSH qualifier identifier.	
+mesh_qualifier	mesh_qualifier	column	MeSH qualifier.	
+oa_status		table	Each row in this table represents a possible open access status (e.g., 'closed', 'bronze', 'green', 'gold', 'hybrid').	
+oa_status	oa_status_id	column	CWTS open access status identifier.	
+oa_status	oa_status	column	Open access status.	
+publisher		table	Each row in this table represents a company or organization that distribute works. For more information, see https://docs.openalex.org/api-entities/publishers.	
+publisher	publisher_id	column	OpenAlex publisher identifier (prefix with 'https://openalex.com/P' to get the full identifier).	
+publisher	publisher	column	Publisher name.	
+publisher	hierarchy_level	column	Publisher hierarchy level. A publisher with hierarchy level 0 has no parent publishers. A hierarchy level 1 publisher has one parent above it, and so on.	
+publisher	parent_publisher_id	column	OpenAlex publisher identifier of the direct parent of the publisher. This will be NULL  if the publisher's hierarchy_level is 0.	
+publisher	homepage_url	column	Homepage URL of the publisher.	
+publisher	ror_id	column	ROR organization identifier. See ROR database.	
+publisher	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+publisher	wikidata_id	column	Wikidata institution identifier. For more information, see https://www.wikidata.org.	
+publisher	image_url	column	URL of an image representing the publisher.	
+publisher	thumbnail_url	column	URL of a smaller version of the image at [image_url].	
+publisher	updated_date	column	The date and time anything in the corresponding OpenAlex publisher record was last changed.	
+publisher	created_date	column	The date the publisher was introduced in the OpenAlex dataset.	
+publisher_alternative_name		table	Each row in this table represents an alternative to the name of a publisher.	
+publisher_alternative_name	publisher_id	column	OpenAlex publisher identifier. See [publisher] table.	
+publisher_alternative_name	alternative_name_seq	column	Alternative name sequence number.	
+publisher_alternative_name	alternative_name	column	An alternative to the name of the publisher.	
+publisher_country		table	Each row in this table represents a country where a publisher is primarily located.	
+publisher_country	publisher_id	column	OpenAlex publisher identifier. See [publisher] table.	
+publisher_country	country_seq	column	Country sequence number.	
+publisher_country	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country where the publisher is primarily located. See [country] table.	
+raw_affiliation_string		table	Each row in this table represents a raw unformatted string containing the author's affiliation as found in the original source.	
+raw_affiliation_string	raw_affiliation_string_id	column	CWTS raw affiliation string identifier.	
+raw_affiliation_string	raw_affiliation_string	column	Raw unformatted affiliation string.	
+raw_author_name		table	Each row in this table represents a raw unformatted string containing the author name as found in the original source.	
+raw_author_name	raw_author_name_id	column	CWTS raw author name identifier.	
+raw_author_name	raw_author_name	column	Raw unformatted author name.	
+region		table	Each row in this table represents the name of a geographical region.	
+region	region_id	column	CWTS region name identifier.	
+region	region	column	Region name.	
+source		table	Each row in this table represents a location where a work is hosted. Sources include journals, conference, preprint repositories,and institutional repositories. For more information, see https://docs.openalex.org/api-entities/sources.	
+source	source_id	column	OpenAlex source identifier (prefix with 'https://openalex.com/S' to get the full identifier).	
+source	source	column	Title of the source.	
+source	abbreviation	column	Abbreviated title of the source (obtained from the ISSN Centre).	
+source	source_type_id	column	CWTS source type identifier. See [source_type] table.	
+source	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country with which the source is associated. See [country] table.	
+source	host_organization_publisher_id	column	OpenAlex publisher identifier of the host organization of the source (if the source is a journal, conference, or eBook platform). See [publisher] table.	
+source	host_organization_institution_id	column	OpenAlex institution identifier of the host organization of the source (if the source is a repository). See [institution] table.	
+source	homepage_url	column	Homepage URL of the source.	
+source	issn_l	column	Linking International Standard Serial Number (ISSN-L) of the source.	
+source	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+source	mag_id	column	Microsoft Academic Graph (MAG) source identifier.	
+source	wikidata_id	column	Wikidata source identifier. For more information, see https://www.wikidata.org.	
+source	fatcat_id	column	Fatcat source identifier. For more information, see https://fatcat.wiki.	
+source	is_in_doaj	column	Source is listed in the Directory of Open Access Journals (DOAJ) (0 = no, 1 = yes).	
+source	is_oa	column	Source is currenlty fully-open-access (0 = no, 1 = yes). This could be true for a preprint repository where everything uploaded is free to read, or for a Gold or Diamond open access journal, where all newly published works are available for free under an open license.	
+source	apc_price_usd	column	APC price of the source in US Dollars (obtained from DOAJ).	
+source	updated_date	column	The date and time anything in the corresponding OpenAlex source record was last changed.	
+source	created_date	column	The date the source was introduced in the OpenAlex dataset.	
+source_alternative_title		table	Each row in this table represents an alternative to the title of a source.	
+source_alternative_title	source_id	column	OpenAlex source identifier. See [source] table.	
+source_alternative_title	alternative_title_seq	column	Alternative title sequence number.	
+source_alternative_title	alternative_title	column	An alternative to the title of the source.	
+source_apc_price		table	Each row in this table represents the APC price of a source in a particular currency (obtained from DOAJ).	
+source_apc_price	source_id	column	OpenAlex source identifier. See [source] table.	
+source_apc_price	apc_price_seq	column	APC price sequence number.	
+source_apc_price	apc_price	column	APC price.	
+source_apc_price	currency	column	Currency.	
+source_issn		table	Each row in this table represents the International Standard Serial Number (ISSN) of a source.	
+source_issn	source_id	column	OpenAlex source identifier. See [source] table.	
+source_issn	issn_seq	column	ISSN sequence number.	
+source_issn	issn	column	International Standard Serial Number (ISSN).	
+source_society		table	Each row in this table represents a society on whose behalf a source is published and maintained. For more information, see https://blog.ourresearch.org/society-list/.	
+source_society	source_id	column	OpenAlex source identifier. See [source] table.	
+source_society	society_seq	column	Society sequence number.	
+source_society	society	column	Name of the society.	
+source_society	homepage_url	column	Homepage URL of the society.	
+source_type		table	Each row in this table represents a type of source (i.e., 'journal', 'repository', 'conference', or 'ebook platform').	
+source_type	source_type_id	column	CWTS source type identifier.	
+source_type	source_type	column	Source type.	
+sustainable_development_goal		table	Each row in this table represents a sustainable development goal.	
+sustainable_development_goal	sustainable_development_goal_id	column	Sustainable development goal identifier.	
+sustainable_development_goal	sustainable_development_goal	column	Sustainable development goal.	
+sustainable_development_goal	taxonomy_url	column	URL of the sustainable development goal.	
+version		table	Each row in this table represents a version that applies to the hosted work (i.e., 'publishedVersion', 'acceptedVersion', or 'submittedVersion'). Based on the DRIVER Guidelines versioning scheme, see https://wiki.surfnet.nl/display/DRIVERguidelines/DRIVER-VERSION+Mappings.	
+version	version_id	column	CWTS version identifier.	
+version	version	column	Version.	
+work		table	Each row in this table represents a scholarly document like a journal, article, book, dataset, or thesis. For more information, see https://docs.openalex.org/api-entities/works.	
+work	work_id	column	OpenAlex work identifier (prefix with 'https://openalex.com/W' to get the full identifier).	
+work	work_type_id	column	CWTS work type identifier. See [work_type] table.	
+work	crossref_work_type_id	column	CWTS work type identifier. See [work_type] table.	
+work	source_id	column	OpenAlex source identifier. See [source] table. This is the identifier of the source where you can find the best (closest to the version of record) copy of the work (refered to as the primary location in the [work_location] table). For a peer-reviewed journal article, the best copy would be a full text published version, hosted by the publisher at the article's DOI URL.	
+work	pub_date	column	Date on which the work was published.	
+work	pub_year	column	Year in which the work was published.	
+work	volume	column	Volume number of the source in which the work was published.	
+work	issue	column	Issue number of the source in which the work was published.	
+work	page_first	column	First page of the work.	
+work	page_last	column	Last page of the work.	
+work	doi_registration_agency_id	column	CWTS DOI registration agency identifier. See [doi_registration_agency] table.	
+work	doi	column	Digital Object Identifier of the work.	
+work	openalex_id	column	OpenAlex identifier (prefix with 'https://openalex.com/' to get the full identifier).	
+work	mag_id	column	Microsoft Academic Graph (MAG) work identifier.	
+work	pmid	column	PubMed identifier of the work.	
+work	pmcid	column	PubMed Central identifier of the work.	
+work	arxiv_id	column	arXiv identifier of the work.	
+work	language_iso2_code	column	ISO-standard 639-1 2-letter language code of the work language.	
+work	is_paratext	column	The work is paratext (0 = no, 1 = yes). In the context of OpenAlex, paratext is stuff that's published in scholarly sources (like a journals) but is about the source rather than a scholarly work properly speaking.  Some examples are: front cover, back cover, table of contents, editorial board listing, and issue information.	
+work	is_retracted	column	The work is known to be retracted (0 = no, 1 = yes).	
+work	is_oa	column	The work can be read for free, without registration (0 = no, 1 = yes).	
+work	any_repository_has_fulltext	column	The full text of any of the versions of the work is available in a repository.	
+work	oa_status_id	column	CWTS open access status identifier. See [oa_status] table.	
+work	oa_url	column	Open access URL for the work.	
+work	apc_list_currency	column	Currency of the listed APC price of the work (as listed by the journal's publisher).	
+work	apc_list_price	column	Listed APC price of the work (as listed by the journal's publisher).	
+work	apc_list_price_usd	column	Listed APC price of the work (as listed by the journal's publisher) in US Dollars.	
+work	apc_list_apc_provenance_id	column	CWTS APC provenance data source identifier of the listed APC price. See apc_provenance] table.	
+work	apc_paid_currency	column	Currency of the paid APC price of the work (as listed by the journal's publisher).	
+work	apc_paid_price	column	Paid APC price of the work.	
+work	apc_paid_price_usd	column	Paid APC price of the work in US Dollars.	
+work	apc_paid_apc_provenance_id	column	CWTS APC provenance data source identifier of the paid APC price. See apc_provenance] table.	
+work	fulltext_origin_id	column	CWTS full text origin identifer. See fulltext_origin] table.	
+work	n_refs	column	Number of cited references of the work.	
+work	n_cits	column	Number of citations of the work.	
+work	updated_date	column	The date and time anything in the corresponding OpenAlex work record was last changed.	
+work	created_date	column	The date the work was introduced in the OpenAlex dataset.	
+work_abstract		table	Each row in this table represents an abstract of a work.	
+work_abstract	work_id	column	OpenAlex work identifier. See [work] table.	
+work_abstract	abstract	column	Abstract of the work.	
+work_author		table	This table links works to authors.	
+work_author	work_id	column	OpenAlex work identifier. See [work] table.	
+work_author	author_seq	column	Author sequence number.	
+work_author	author_id	column	OpenAlex author identifier. See [author] table.	
+work_author	author_position_id	column	CWTS author position identifier. See [author_position] table.	
+work_author	is_corresponding_author	column	The author is the corresponding author for the work (0 = no, 1 = yes, NULL = either this work has no corresponding author, or information about the corresponding author is missing).	
+work_author	raw_author_name_id	column	CWTS raw author name identifier. See [raw_author_name] table.	
+work_author_country		table	This table links the authors and countries of works.	
+work_author_country	work_id	column	OpenAlex work identifier. See [work] table.	
+work_author_country	author_seq	column	Author sequence number.	
+work_author_country	country_seq	column	Country sequence number.	
+work_author_country	country_iso_alpha2_code	column	ISO-standard 3166-1 2-letter code of the country of the author. See [country] table.	
+work_author_institution		table	This table links the authors and institutions of works.	
+work_author_institution	work_id	column	OpenAlex work identifier. See [work] table.	
+work_author_institution	author_seq	column	Author sequence number.	
+work_author_institution	institution_seq	column	Institution sequence number.	
+work_author_raw_affiliation_string		table	This table links the authors and raw affiliation strings of works.	
+work_author_raw_affiliation_string	work_id	column	OpenAlex work identifier. See [work] table.	
+work_author_raw_affiliation_string	author_seq	column	Author sequence number.	
+work_author_raw_affiliation_string	raw_affiliation_string_seq	column	Raw affiliation string sequence number.	
+work_author_raw_affiliation_string	raw_affiliation_string_id	column	CWTS raw affiliation string identifier. See [raw_affiliation_string] table.	
+work_concept		table	This table links works to concepts.	
+work_concept	work_id	column	OpenAlex work identifier. See [work] table.	
+work_concept	concept_seq	column	Concept sequence number.	
+work_concept	concept_id	column	OpenAlex concept identifier. See [concept] table.	
+work_concept	score	column	The strength of the connection between the work and the concept, from 0 to 1 (higher is stronger).	
+work_detail		table	Each row in this table represents the main bibliographic details of a work.	
+work_detail	work_id	column	OpenAlex work identifier. See [work] table.	
+work_detail	author_first	column	Name of the first author of the work.	
+work_detail	author_et_al	column	List of names of the other authors of a work. If a work has more than seven authors, the name of the second, third, fourth, fifth and last author is listed.	
+work_detail	institution_first	column	Name of the first affiliated organization of the work.	
+work_detail	institution_et_al	column	List of names of the other affiliated organizations of a work. If a work has more than seven affiliated organizations, the name of the second, third, fourth, fifth and last affiliated organization is listed.	
+work_detail	title	column	Title of the work.	
+work_detail	source	column	Title of the source in which the work was published.	
+work_detail	pub_year	column	Year in which the work was published.	
+work_detail	volume	column	Volume number of the source in which the work was published.	
+work_detail	issue	column	Issue number of the source in which the work was published.	
+work_detail	pages	column	Page range of the work.	
+work_detail	doi	column	Digital Object Identifier.	
+work_detail	pmid	column	PubMed identifier of the work.	
+work_detail	work_type	column	Work type.	
+work_detail	n_cits	column	Number of citations of the work.	
+work_detail	n_self_cits	column	Number of author self-citations of the work. A citation is regarded as an author self-citation if the citing and the cited work have at least one author name in common.	
+work_grant		table	This table links works to grants.	
+work_grant	work_id	column	OpenAlex work identifier. See [work] table.	
+work_grant	grant_seq	column	Grant sequence number.	
+work_grant	award_id	column	Award ID.	
+work_grant	funder_id	column	OpenAlex funder identifier. See [funder] table.	
+work_institution		table	This table links works to institutions.	
+work_institution	work_id	column	OpenAlex work identifier. See [work] table.	
+work_institution	institution_seq	column	Institution sequence number.	
+work_institution	institution_id	column	OpenAlex institution identifier. See [institution] table.	
+work_institution	institution_name_id	column	OpenAlex institution name identifier. See [institution_name] table.	
+work_keyword		table	This table links works to keywords.	
+work_keyword	work_id	column	OpenAlex work identifier. See [work] table.	
+work_keyword	keyword_seq	column	Keyword sequence number.	
+work_keyword	keyword_id	column	CWTS keyword identifier. See [keyword] table.	
+work_keyword	score	column	The strength of the connection between the work and the keyword, from 0 to 1 (higher is stronger).	
+work_location		table	Each row in this table represents a location where a version of a work is hosted.	
+work_location	work_id	column	OpenAlex work identifier. See [work] table.	
+work_location	location_seq	column	Location sequence number.	
+work_location	is_primary_location	column	Location is the best (closest to the version of record) copy of the work (0 = no, 1 = yes).	
+work_location	is_best_oa_location	column	Location is the best available open access location of the work (0 = no, 1 = yes).	
+work_location	source_id	column	OpenAlex source identifier. See [source] table.	
+work_location	landing_page_url	column	Landing page URL of the location.	
+work_location	pdf_url	column	PDF URL of the location.	
+work_location	version_id	column	CWTS version identifier. See [version] table. This identfier refers to the version that applies to the work at the hosted location.	
+work_location	license_id	column	CWTS license identifier. See [license] table. This identifier refers to the license that applies to the work at the hosted location.	
+work_location	is_oa	column	Work can be read for free, without registration at the hosted location (0 = no, 1 = yes).	
+work_location	is_accepted	column	Version of the work at this location is accepted or published (0 = no, 1 = yes).	
+work_location	is_published	column	Version of the work at this location is published (0 = no, 1 = yes).	
+work_mesh		table	This table links works to descriptors and qualifiers from the MeSH database. For more information, see https://www.nlm.nih.gov/mesh/concept_structure.html.	
+work_mesh	work_id	column	OpenAlex work identifier. See [work] table.	
+work_mesh	mesh_seq	column	MeSH sequence number.	
+work_mesh	mesh_descriptor_ui	column	MeSH descriptor identifier. See [mesh_descriptor] table.	
+work_mesh	mesh_qualifier_ui	column	MeSH qualifier identifier. See [mesh_qualifier] table.	
+work_mesh	is_major_topic	column	The MeSH term is a major topic of the work (0 = no, 1 = yes).	
+work_reference		table	Each row in this table represents a cited reference of a work.	
+work_reference	work_id	column	OpenAlex work identifier. See [work] table.	
+work_reference	reference_seq	column	Reference sequence number.	
+work_reference	cited_work_id	column	OpenAlex work identifier of the cited work. See [work] table.	
+work_related		table	This table links works to related to this work. Related works are computed algorithmically by finding recent works with the most concepts in common with the work.	
+work_related	work_id	column	OpenAlex work identifier. See [work] table.	
+work_related	related_work_seq	column	Related work sequence number.	
+work_related	related_work_id	column	OpenAlex work identifier of the related work. See [work] table.	
+work_sustainable_development_goal		table	This table links works to sustainable development goals.	
+work_sustainable_development_goal	work_id	column	OpenAlex work identifier. See [work] table.	
+work_sustainable_development_goal	sustainable_development_goal_seq	column	Sustainable development goal sequence number.	
+work_sustainable_development_goal	sustainable_development_goal_id	column	Sustainable development goal identifier. See [sustainable_development_goal] table.	
+work_sustainable_development_goal	score	column	The strength of the connection between the work and the sustainable development goal, from 0 to 1 (higher is stronger).	
+work_title		table	Each row in this table represents the title of a work.	
+work_title	work_id	column	OpenAlex work identifier. See [work] table.	
+work_title	title	column	Title of the work.	
+work_type		table	Each row in this table represents a type of work (e.g., 'article' or 'book-chapter').	
+work_type	work_type_id	column	CWTS work type identifier.	
+work_type	work_type	column	Work type.	

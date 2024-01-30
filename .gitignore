@@ -1,0 +1,9 @@
+
+/data/*
+!/data/validation/
+
+**/process_folder/
+**/temp
+
+*.sublime-project
+*.sublime-workspace

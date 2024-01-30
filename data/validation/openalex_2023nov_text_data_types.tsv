@@ -1,0 +1,4 @@
+text_data	work_id	bigint	20
+text_data	title	nvarchar	99999
+text_data	abstract	nvarchar	99999
+text_data	keywords	nvarchar	99999

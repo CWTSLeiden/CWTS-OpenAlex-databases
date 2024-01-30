@@ -1,0 +1,31 @@
+drop type if exists pub_indicators_table
+create type pub_indicators_table as table
+(
+	work_id bigint not null,
+	p float not null,
+	cs float null,
+	ncs float null,
+	p_top_n_cits float null,
+	p_top_prop float null,
+	p_uncited float null,
+	js float null,
+	njs float null,
+	jpp_top_n_cits float null,
+	jpp_top_prop float null,
+	jpp_uncited float null,
+	n_self_cits float null,
+	n_refs float null,
+	n_refs_covered float null,
+	p_collab float null,
+	p_int_collab float null,
+	p_industry float null,
+	gcd float null,
+	p_short_dist_collab float null,
+	p_long_dist_collab float null,
+	p_oa float null,
+	p_gold_oa float null,
+	p_hybrid_oa float null,
+	p_bronze_oa float null,
+	p_green_oa float null,
+	p_oa_unknown float null
+)

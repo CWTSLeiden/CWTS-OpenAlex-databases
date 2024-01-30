@@ -1,0 +1,4 @@
+source	source_id	bigint	20
+source	is_core_source	bit	1
+work	work_id	bigint	20
+work	is_core_work	bit	1
