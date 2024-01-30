@@ -14,5 +14,7 @@ The source code produces five Microsoft SQL Server databases:
 
 (5) Database containing stored procedures for indicator calculations.
 
+See [this blog post](https://www.leidenmadtrics.nl/articles/introducing-the-leiden-ranking-open-edition) for more information about (3), (4), and (5).
+
 This repository makes use of the [CWTS ETL tooling repository](https://github.com/CWTSLeiden/CWTS-ETL-tooling), the [publicationclassification repository](https://github.com/CWTSLeiden/publicationclassification), and the [publicationclassificationlabeling repository](https://github.com/CWTSLeiden/publicationclassificationlabeling).
 
