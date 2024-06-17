@@ -4,10 +4,10 @@
 :: Pipeline settings
 :: ---------------------------------------------------------------------------------------
 
-set db_version=2023nov
-set previous_db_version=2023aug
+set db_version=2024aug
+set previous_db_version=2023nov
 set db_owner=vuw\%USERNAME%
-set database_drive_letter=I
+set database_drive_letter=G
 
 set notifications=true
 set verbose=true
@@ -68,7 +68,7 @@ set classification_classification_table=classification.pub_cluster
 :: publicationclassificationlabeling
 set classification_n_pub_titles_per_cluster=250
 set classification_pub_titles_table=classification.cluster_pub_titles
-set classification_label_table=classification.cluster_labels
+set classification_label_table=classification.cluster_labeling
 set classification_openai_gpt_model=gpt-3.5-turbo-1106
 set classification_print_labeling=%verbose%
 
@@ -83,7 +83,7 @@ set core_min_pub_year_core_pubs=%classification_min_pub_year_core_pub_set%
 :: ---------------------------------------------------------------------------------------
 
 set indicators_min_pub_year=%classification_min_pub_year_core_pub_set%
-set indicators_max_pub_year=2022
+set indicators_max_pub_year=2023
 
 :: ---------------------------------------------------------------------------------------
 :: Terminal Settings
