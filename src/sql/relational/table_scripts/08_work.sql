@@ -99,6 +99,8 @@ begin
 	print @n_works_best_oa_location2
 end
 
+update #work_location3 set license = 'cc-by' where license = 'cc-by-4.0'
+
 
 
 -- work_type
@@ -488,7 +490,7 @@ end
 
 insert into license with(tablock)
 select license
-from $(works_json_db_name)..work_location
+from #work_location3
 where license is not null
 except
 select license
