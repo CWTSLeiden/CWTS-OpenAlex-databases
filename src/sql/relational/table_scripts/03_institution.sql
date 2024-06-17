@@ -474,3 +474,74 @@ alter table institution_lineage add constraint pk_institution_lineage primary ke
 create index idx_institution_lineage_lineage_institution_id on institution_lineage(lineage_institution_id)
 alter table institution_lineage add constraint fk_institution_lineage_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)
 alter table institution_lineage add constraint fk_institution_lineage_lineage_institution_id_institution_institution_id foreign key(lineage_institution_id) references institution(institution_id)
+
+
+
+-- author_institution
+drop table if exists author_institution
+create table author_institution
+(
+	author_id bigint not null,
+	institution_seq smallint not null,
+	institution_id bigint not null
+)
+go
+
+insert into author_institution with(tablock)
+select a.author_id,
+	institution_seq = b.affiliation_seq,
+	institution_id = replace(b.institution_id, 'https://openalex.org/I', '')
+from _author as a
+join $(authors_json_db_name)..author_affiliation as b on a.folder = b.folder and a.record_id = b.record_id
+
+alter table author_institution add constraint pk_author_institution primary key(author_id, institution_seq)
+alter table author_institution add constraint fk_author_institution_author_id_author_author_id foreign key(author_id) references author(author_id)
+alter table author_institution add constraint fk_author_institution_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)
+
+
+
+-- author_institution_year
+drop table if exists author_institution_year
+create table author_institution_year
+(
+	author_id bigint not null,
+	institution_seq smallint not null,
+	year_seq smallint not null,
+	[year] smallint not null
+)
+go
+
+insert into author_institution_year with(tablock)
+select a.author_id,
+	institution_seq = b.affiliation_seq,
+	b.year_seq,
+	b.[year]
+from _author as a
+join $(authors_json_db_name)..author_affiliation_year as b on a.folder = b.folder and a.record_id = b.record_id
+
+alter table author_institution_year add constraint pk_author_institution_year primary key(author_id, institution_seq, year_seq)
+alter table author_institution_year add constraint fk_author_institution_year_author_id_author_author_id foreign key(author_id) references author(author_id)
+alter table author_institution_year add constraint fk_author_institution_year_author_id_author_institution_author_id_institution_seq foreign key(author_id, institution_seq) references author_institution(author_id, institution_seq)
+
+
+
+-- author_last_known_institution
+drop table if exists author_last_known_institution
+create table author_last_known_institution
+(
+	author_id bigint not null,
+	last_known_institution_seq smallint not null,
+	last_known_institution_id bigint not null
+)
+go
+
+insert into author_last_known_institution with(tablock)
+select a.author_id,
+	last_known_institution_seq = b.affiliation_seq,
+	last_known_institution_id = replace(b.institution_id, 'https://openalex.org/I', '')
+from _author as a
+join $(authors_json_db_name)..author_affiliation as b on a.folder = b.folder and a.record_id = b.record_id
+
+alter table author_last_known_institution add constraint pk_author_last_known_institution primary key(author_id, last_known_institution_seq)
+alter table author_last_known_institution add constraint fk_author_last_known_institution_author_id_author_author_id foreign key(author_id) references author(author_id)
+alter table author_last_known_institution add constraint fk_author_last_known_institution_institution_id_institution_institution_id foreign key(last_known_institution_id) references institution(institution_id)
