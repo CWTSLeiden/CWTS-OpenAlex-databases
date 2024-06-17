@@ -888,36 +888,35 @@ drop table if exists keyword
 create table keyword
 (
 	keyword_id int not null identity(1, 1),
-	keyword nvarchar(1200) not null,
+	keyword nvarchar(200) not null,
 )
 go
 
-if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
-begin
-	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'keyword')
-	begin
-		set identity_insert keyword on
+--if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
+--begin
+--	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'keyword')
+--	begin
+--		set identity_insert keyword on
 
-		insert into keyword with(tablock) (keyword_id, keyword)
-		select keyword_id, keyword
-		from $(previous_relational_db_name)..keyword
+--		insert into keyword with(tablock) (keyword_id, keyword)
+--		select keyword_id, keyword
+--		from $(previous_relational_db_name)..keyword
 
-		set identity_insert keyword off
-	end
-end
+--		set identity_insert keyword off
+--	end
+--end
 
 insert into keyword with(tablock)
-select keyword
+select keyword = display_name
 from $(works_json_db_name)..work_keyword
-where keyword is not null
+where display_name is not null
 except
 select keyword
 from keyword
 order by keyword
 
 alter table keyword add constraint pk_keyword primary key(keyword_id)
---create index idx_keyword_keyword on keyword(keyword)
-
+create index idx_keyword_keyword on keyword(keyword)
 
 
 -- work_keyword
@@ -938,7 +937,7 @@ select a.work_id,
 	b.score
 from _work as a
 join $(works_json_db_name)..work_keyword as b on a.folder = b.folder and a.record_id = b.record_id
-join keyword as c on b.keyword = c.keyword
+join keyword as c on b.display_name = c.keyword
 
 alter table work_keyword add constraint pk_work_keyword primary key(work_id, keyword_seq)
 create index idx_work_keyword_keyword_id on work_keyword(keyword_id)
