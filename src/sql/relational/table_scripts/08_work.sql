@@ -919,6 +919,7 @@ alter table keyword add constraint pk_keyword primary key(keyword_id)
 create index idx_keyword_keyword on keyword(keyword)
 
 
+
 -- work_keyword
 drop table if exists work_keyword
 create table work_keyword
@@ -972,3 +973,65 @@ create index idx_work_topic_topic_id on work_topic(topic_id)
 create index idx_work_topic_is_primary_topic on work_topic(is_primary_topic)
 alter table work_topic add constraint fk_work_topic_work_id_work_work_id foreign key(work_id) references work(work_id)
 alter table work_topic add constraint fk_work_topic_topic_id_topic_topic_id foreign key(topic_id) references topic(topic_id)
+
+
+
+-- data_source
+drop table if exists [data_source]
+create table [data_source]
+(
+	data_source_id int not null identity(1, 1),
+	[data_source] varchar(20) not null,
+)
+go
+
+--if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
+--begin
+--	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'data_source')
+--	begin
+--		set identity_insert [data_source] on
+
+--		insert into [data_source] with(tablock) (data_source_id, [data_source])
+--		select data_source_id, [data_source]
+--		from $(previous_relational_db_name)..[data_source]
+
+--		set identity_insert [data_source] off
+--	end
+--end
+
+insert into [data_source] with(tablock)
+select [data_source] = indexed_in
+from $(works_json_db_name)..work_indexed_in
+where indexed_in is not null
+except
+select [data_source]
+from [data_source]
+order by [data_source]
+
+alter table [data_source] add constraint pk_data_source primary key(data_source_id)
+create index idx_data_source_data_source on [data_source](data_source)
+
+
+
+-- work_data_source
+drop table if exists work_data_source
+create table work_data_source
+(
+	work_id bigint not null,
+	data_source_seq smallint not null,
+	data_source_id int not null
+)
+go
+
+insert into work_data_source with(tablock)
+select a.work_id,
+	data_source_seq = b.indexed_in_seq,
+	c.data_source_id
+from _work as a
+join $(works_json_db_name)..work_indexed_in as b on a.folder = b.folder and a.record_id = b.record_id
+join [data_source] as c on b.indexed_in = c.[data_source]
+
+alter table work_data_source add constraint pk_work_data_source primary key(work_id, data_source_seq)
+create index idx_work_data_source_data_source_id on work_data_source(data_source_id)
+alter table work_data_source add constraint fk_work_data_source_work_id_work_work_id foreign key(work_id) references work(work_id)
+alter table work_data_source add constraint fk_work_data_source_data_source_id_data_source_data_source_id foreign key(data_source_id) references [data_source](data_source_id)
