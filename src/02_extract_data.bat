@@ -36,6 +36,18 @@ call %functions%\unzip_folder.bat ^
     flatten_folder_structure
 
 call %functions%\unzip_folder.bat ^
+    %download_json_files_data_folder%\data\domains "gz" ^
+    %extract_json_files_data_folder%\domains ^
+    %zip_log_folder%\domains ^
+    flatten_folder_structure
+
+call %functions%\unzip_folder.bat ^
+    %download_json_files_data_folder%\data\fields "gz" ^
+    %extract_json_files_data_folder%\fields ^
+    %zip_log_folder%\fields ^
+    flatten_folder_structure
+
+call %functions%\unzip_folder.bat ^
     %download_json_files_data_folder%\data\funders "gz" ^
     %extract_json_files_data_folder%\funders ^
     %zip_log_folder%\funders ^
@@ -57,6 +69,18 @@ call %functions%\unzip_folder.bat ^
     %download_json_files_data_folder%\data\sources "gz" ^
     %extract_json_files_data_folder%\sources ^
     %zip_log_folder%\sources ^
+    flatten_folder_structure
+
+call %functions%\unzip_folder.bat ^
+    %download_json_files_data_folder%\data\subfields "gz" ^
+    %extract_json_files_data_folder%\subfields ^
+    %zip_log_folder%\subfields ^
+    flatten_folder_structure
+
+call %functions%\unzip_folder.bat ^
+    %download_json_files_data_folder%\data\topics "gz" ^
+    %extract_json_files_data_folder%\topics ^
+    %zip_log_folder%\topics ^
     flatten_folder_structure
 
 for /L %%i in (1,1,%number_of_processes%) do (

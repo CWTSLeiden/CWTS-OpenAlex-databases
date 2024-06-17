@@ -944,3 +944,32 @@ alter table work_keyword add constraint pk_work_keyword primary key(work_id, key
 create index idx_work_keyword_keyword_id on work_keyword(keyword_id)
 alter table work_keyword add constraint fk_work_keyword_work_id_work_work_id foreign key(work_id) references work(work_id)
 alter table work_keyword add constraint fk_work_keyword_keyword_id_keyword_keyword_id foreign key(keyword_id) references keyword(keyword_id)
+
+
+
+-- work_topic
+drop table if exists work_topic
+create table work_topic
+(
+	work_id bigint not null,
+	topic_seq smallint not null,
+	topic_id smallint not null,
+	score float not null,
+	is_primary_topic bit not null
+)
+go
+
+insert into work_topic with(tablock)
+select a.work_id,
+	b.topic_seq,
+	topic_id = replace(b.id, 'https://openalex.org/T', ''),
+	b.score,
+	is_primary_topic = case when b.topic_seq = 1 then 1 else 0 end
+from _work as a
+join $(works_json_db_name)..work_topic as b on a.folder = b.folder and a.record_id = b.record_id
+
+alter table work_topic add constraint pk_work_topic primary key(work_id, topic_seq)
+create index idx_work_topic_topic_id on work_topic(topic_id)
+create index idx_work_topic_is_primary_topic on work_topic(is_primary_topic)
+alter table work_topic add constraint fk_work_topic_work_id_work_work_id foreign key(work_id) references work(work_id)
+alter table work_topic add constraint fk_work_topic_topic_id_topic_topic_id foreign key(topic_id) references topic(topic_id)

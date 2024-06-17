@@ -33,10 +33,14 @@ set indicators_db_name=openalex_%db_version%_indicators
 set json_db_name=openalex_%db_version%_json
 set authors_json_db_name=openalex_%db_version%_authors_json
 set concepts_json_db_name=openalex_%db_version%_concepts_json
+set domains_json_db_name=openalex_%db_version%_domains_json
+set fields_json_db_name=openalex_%db_version%_fields_json
 set funders_json_db_name=openalex_%db_version%_funders_json
 set institutions_json_db_name=openalex_%db_version%_institutions_json
 set publishers_json_db_name=openalex_%db_version%_publishers_json
 set sources_json_db_name=openalex_%db_version%_sources_json
+set subfields_json_db_name=openalex_%db_version%_subfields_json
+set topics_json_db_name=openalex_%db_version%_topics_json
 set works_json_db_name=openalex_%db_version%_works_json
 
 :: Utility databases

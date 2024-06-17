@@ -21,6 +21,24 @@ call %functions%\json_parse_data.bat ^
     erase_previous
 
 call %functions%\json_parse_data.bat ^
+    %domains_json_db_name% ^
+    openalexdomains ^
+    %process_folder%\domains ^
+    %extract_json_files_data_folder%\domains ^
+    %generated_sql_scripts_data_folder%\domains ^
+    %json_parser_log_folder%\domains ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %fields_json_db_name% ^
+    openalexfields ^
+    %process_folder%\fields ^
+    %extract_json_files_data_folder%\fields ^
+    %generated_sql_scripts_data_folder%\fields ^
+    %json_parser_log_folder%\fields ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
     %funders_json_db_name% ^
     openalexfunders ^
     %process_folder%\funders ^
@@ -54,6 +72,24 @@ call %functions%\json_parse_data.bat ^
     %extract_json_files_data_folder%\sources ^
     %generated_sql_scripts_data_folder%\sources ^
     %json_parser_log_folder%\sources ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %subfields_json_db_name% ^
+    openalexsubfields ^
+    %process_folder%\subfields ^
+    %extract_json_files_data_folder%\subfields ^
+    %generated_sql_scripts_data_folder%\subfields ^
+    %json_parser_log_folder%\subfields ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %topics_json_db_name% ^
+    openalextopics ^
+    %process_folder%\topics ^
+    %extract_json_files_data_folder%\topics ^
+    %generated_sql_scripts_data_folder%\topics ^
+    %json_parser_log_folder%\topics ^
     erase_previous
 
 for /L %%i in (1,1,%number_of_processes%) do (

@@ -25,7 +25,7 @@ call %functions%\load_database.bat ^
     %relational_db_name% ^
     %relational_sql_src_folder% ^
     %relational_sql_log_folder% ^
-    "-v previous_relational_db_name=%previous_relational_db_name% authors_json_db_name=%authors_json_db_name% concepts_json_db_name=%concepts_json_db_name% institutions_json_db_name=%institutions_json_db_name% publishers_json_db_name=%publishers_json_db_name% sources_json_db_name=%sources_json_db_name% works_json_db_name=%works_json_db_name% etl_db_name=%etl_db_name%"
+    "-v previous_relational_db_name=%previous_relational_db_name% authors_json_db_name=%authors_json_db_name% concepts_json_db_name=%concepts_json_db_name% domains_json_db_name=%domains_json_db_name% fields_json_db_name=%fields_json_db_name% institutions_json_db_name=%institutions_json_db_name% publishers_json_db_name=%publishers_json_db_name% sources_json_db_name=%sources_json_db_name% subfields_json_db_name=%subfields_json_db_name% topics_json_db_name=%topics_json_db_name% works_json_db_name=%works_json_db_name% etl_db_name=%etl_db_name%"
 call %functions%\check_errors.bat
 
 call %functions%\validate_database.bat   %relational_db_name%

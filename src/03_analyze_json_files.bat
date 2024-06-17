@@ -7,10 +7,14 @@ call settings.bat
 :: =======================================================================================
 
 call :analyze_json_tags %extract_json_files_data_folder%\concepts
+call :analyze_json_tags %extract_json_files_data_folder%\domains
+call :analyze_json_tags %extract_json_files_data_folder%\fields
 call :analyze_json_tags %extract_json_files_data_folder%\funders
 call :analyze_json_tags %extract_json_files_data_folder%\institutions
 call :analyze_json_tags %extract_json_files_data_folder%\publishers
 call :analyze_json_tags %extract_json_files_data_folder%\sources
+call :analyze_json_tags %extract_json_files_data_folder%\subfields
+call :analyze_json_tags %extract_json_files_data_folder%\topics
 call :analyze_json_tags %extract_json_files_data_folder%\authors
 call :analyze_json_tags %extract_json_files_data_folder%\works
 
