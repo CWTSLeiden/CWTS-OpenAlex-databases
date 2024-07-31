@@ -106,7 +106,7 @@ drop table if exists work_type
 create table work_type
 (
 	work_type_id tinyint not null identity(1, 1),
-	work_type varchar(20) not null
+	work_type varchar(25) not null
 )
 go
 

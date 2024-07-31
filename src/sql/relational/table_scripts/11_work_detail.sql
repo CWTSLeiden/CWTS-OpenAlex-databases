@@ -141,7 +141,7 @@ create table work_detail
 	pages nvarchar(350) null,
 	doi varchar(330) null,
 	pmid int null,
-	work_type varchar(20) null,
+	work_type varchar(25) null,
 	n_cits int not null,
 	n_self_cits int not null
 )
