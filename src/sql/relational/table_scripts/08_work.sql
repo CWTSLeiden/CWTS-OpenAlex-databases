@@ -565,10 +565,14 @@ go
 
 insert into work_title with(tablock)
 select a.work_id,
-	trim($(etl_db_name).dbo.remove_html_tags($(etl_db_name).dbo.decode_html_characters2(b.title)))
+	trim($(etl_db_name).dbo.regex_replace($(etl_db_name).dbo.remove_html_tags($(etl_db_name).dbo.decode_html_characters2(b.title)), '[\r\n\t]', ' '))
 from _work as a
 join $(works_json_db_name)..work as b on a.folder = b.folder and a.record_id = b.record_id
 where b.title is not null
+
+delete a with(tablock)
+from work_title as a
+where len(a.title) = 0
 
 alter table work_title add constraint pk_work_title primary key(work_id)
 alter table work_title add constraint fk_work_title_work_id_work_work_id foreign key(work_id) references work(work_id)
@@ -586,10 +590,14 @@ go
 
 insert into work_abstract with(tablock)
 select a.work_id,
-	trim($(etl_db_name).dbo.remove_html_tags($(etl_db_name).dbo.decode_html_characters2(b.abstract)))
+	trim($(etl_db_name).dbo.regex_replace($(etl_db_name).dbo.remove_html_tags($(etl_db_name).dbo.decode_html_characters2(b.abstract)), '[\r\n\t]', ' '))
 from _work as a
 join $(works_json_db_name)..work_abstract as b on a.folder = b.folder and a.record_id = b.record_id
 where b.abstract is not null
+
+delete a with(tablock)
+from work_abstract as a
+where len(a.abstract) = 0
 
 alter table work_abstract add constraint pk_work_abstract primary key(work_id)
 alter table work_abstract add constraint fk_work_abstract_work_id_work_work_id foreign key(work_id) references work(work_id)
