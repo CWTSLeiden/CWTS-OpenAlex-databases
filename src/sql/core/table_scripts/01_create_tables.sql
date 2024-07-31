@@ -63,7 +63,7 @@ where a.pub_year >= ($(core_min_pub_year_core_pubs) - 5)
 
 -- Start identification of core publications.
 
--- Step 1: Exclude works that do not have an article work type and a journal or book series source type.
+-- Step 1: Exclude works that do not have an article/review work type and a journal source type, a book chapter/article/review work type and a book series source type.
 
 drop table if exists #work_step1
 select a.*
@@ -73,12 +73,12 @@ join $(relational_db_name)..work_type as b on a.work_type_id = b.work_type_id
 join $(relational_db_name)..source_type as c on a.source_type_id = c.source_type_id
 where
 	(
-		b.work_type = 'article'
+		b.work_type in ('article', 'review')
 			and c.source_type = 'journal'
 	)
 	or
 	(
-		b.work_type in ('book-chapter', 'article')
+		b.work_type in ('book-chapter', 'article', 'review')
 			and c.source_type = 'book series'
 	)
 
