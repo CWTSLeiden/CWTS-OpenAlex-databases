@@ -9,7 +9,7 @@ go
 create fulltext catalog text_catalog
 go
 
-create fulltext index on text_data(title, abstract)
+create fulltext index on text_data(title, abstract, keywords)
 key index pk_text_data on text_catalog
 with stoplist off, change_tracking off, no population
 go
