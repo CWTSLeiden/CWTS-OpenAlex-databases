@@ -8,8 +8,8 @@ declare @max_pub_year_core_pub_set int = $(classification_max_pub_year_core_pub_
 drop table if exists #pub
 select a.work_id,
 	pub_no = row_number() over (order by a.work_id) - 1,
-	core_pub = cast(case when a.pub_year between @min_pub_year_core_pub_set and @max_pub_year_core_pub_set and a.work_type_id in (26, 2) then 1 else 0 end as bit) 
-		-- 26: article, 2: book-chapter
+	core_pub = cast(case when a.pub_year between @min_pub_year_core_pub_set and @max_pub_year_core_pub_set and a.work_type_id in (26, 34, 2, 32) then 1 else 0 end as bit) 
+		-- 26: article, 34: review, 2: book-chapter, 32: preprint
 into #pub
 from $(relational_db_name)..work as a
 where a.pub_year between @min_pub_year_extended_pub_set and @max_pub_year_extended_pub_set
