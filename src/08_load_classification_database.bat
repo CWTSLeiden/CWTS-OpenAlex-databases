@@ -108,6 +108,34 @@ goto:eof
 
 
 :: =======================================================================================
+:copy_previous_classification
+:: =======================================================================================
+
+call %functions%\run_sql_script.bat ^
+    %classification_db_name% ^
+    %classification_sql_src_folder%\copy_publicationclassification.sql ^
+    %classification_sql_log_folder% ^
+    "-v previous_classification_db_name=%previous_classification_db_name%"
+
+goto:eof
+:: =======================================================================================
+
+
+:: =======================================================================================
+:complement_classification
+:: =======================================================================================
+
+call %functions%\run_sql_script.bat ^
+    %classification_db_name% ^
+    %classification_sql_src_folder%\complement_publicationclassification.sql ^
+    %classification_sql_log_folder% ^
+    "-v relational_db_name=%relational_db_name%"
+
+goto:eof
+:: =======================================================================================
+
+
+:: =======================================================================================
 :create_labeling
 :: =======================================================================================
 
@@ -126,6 +154,20 @@ call %functions%\secret.bat ^
 call %functions%\classification_create_labeling.bat ^
     %classification_db_name% ^
     %publicationclassificationlabeling_log_folder%
+
+goto:eof
+:: =======================================================================================
+
+
+:: =======================================================================================
+:copy_previous_labeling
+:: =======================================================================================
+
+call %functions%\run_sql_script.bat ^
+    %classification_db_name% ^
+    %classification_sql_src_folder%\copy_publicationclassificationlabeling.sql ^
+    %classification_sql_log_folder% ^
+    "-v previous_classification_db_name=%previous_classification_db_name%"
 
 goto:eof
 :: =======================================================================================
@@ -204,11 +246,14 @@ goto:eof
 echo Choose step(s) to run (option numbers, [space] separated)
 echo Option 0: create_database
 echo Option 1: create_classification
-echo Option 2: create_labeling
-echo Option 3: table_scripts
-echo Option 4: create_vosviewer_maps
-echo Option 5: load_vosviewer_maps_only
-echo Option 6: validate
+echo Option 2: copy_previous_classification
+echo Option 3: complement_classification
+echo Option 4: create_labeling
+echo Option 5: copy_previous_labeling
+echo Option 6: table_scripts
+echo Option 7: create_vosviewer_maps
+echo Option 8: load_vosviewer_maps_only
+echo Option 9: validate
 
 set /p type_of_load="Enter option: "
 
@@ -226,11 +271,14 @@ set "type_of_load=%type_of_load% "
 
 if not "%type_of_load:0 =%" == "%type_of_load%" ( set "run=1" && call :create_database )
 if not "%type_of_load:1 =%" == "%type_of_load%" ( set "run=1" && call :create_classification )
-if not "%type_of_load:2 =%" == "%type_of_load%" ( set "run=1" && call :create_labeling )
-if not "%type_of_load:3 =%" == "%type_of_load%" ( set "run=1" && call :table_scripts )
-if not "%type_of_load:4 =%" == "%type_of_load%" ( set "run=1" && call :create_vosviewer_maps )
-if not "%type_of_load:5 =%" == "%type_of_load%" ( set "run=1" && call :load_vosviewer_maps )
-if not "%type_of_load:6 =%" == "%type_of_load%" ( set "run=1" && call :validate )
+if not "%type_of_load:2 =%" == "%type_of_load%" ( set "run=1" && call :copy_previous_classification )
+if not "%type_of_load:3 =%" == "%type_of_load%" ( set "run=1" && call :complement_classification )
+if not "%type_of_load:4 =%" == "%type_of_load%" ( set "run=1" && call :create_labeling )
+if not "%type_of_load:5 =%" == "%type_of_load%" ( set "run=1" && call :copy_previous_labeling )
+if not "%type_of_load:6 =%" == "%type_of_load%" ( set "run=1" && call :table_scripts )
+if not "%type_of_load:7 =%" == "%type_of_load%" ( set "run=1" && call :create_vosviewer_maps )
+if not "%type_of_load:8 =%" == "%type_of_load%" ( set "run=1" && call :load_vosviewer_maps )
+if not "%type_of_load:9 =%" == "%type_of_load%" ( set "run=1" && call :validate )
 
 if "%run%" == "0" (
     echo No valid input

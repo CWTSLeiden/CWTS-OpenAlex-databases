@@ -51,6 +51,8 @@ set dba_db_name=cwtsdb_dba
 :: Classification Settings
 :: ---------------------------------------------------------------------------------------
 
+set previous_classification_db_name=openalex_%previous_db_version%_classification
+
 set classification_min_pub_year_extended_pub_set=1980
 set classification_max_pub_year_extended_pub_set=2023
 set classification_min_pub_year_core_pub_set=2000
