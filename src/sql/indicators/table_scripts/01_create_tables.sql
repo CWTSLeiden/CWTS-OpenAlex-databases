@@ -56,8 +56,8 @@ create table doc_type
 
 insert doc_type values
 (1, 'Non-citable item'),
-(2, 'Article'),
+(2, 'Article / review'),
 --(3, 'Letter'),
-(4, 'Proceeding / chapter')
+(4, 'Conference paper / book Chapter')
 
 alter table doc_type add constraint pk_doc_type primary key(doc_type_no)

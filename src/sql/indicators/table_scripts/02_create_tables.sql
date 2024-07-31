@@ -118,9 +118,9 @@ select a.work_id,
 	work_no = row_number() over (order by a.work_id),
 	doc_type_no =
 		case
-			when a.work_type_id = 26 /* article */ and b.source_type_id = 3 /* journal */ then 2  -- Article.
-			when a.work_type_id in (2, 26) /* book-chapter, article */ and b.source_type_id = 5 /* book series */ then 2  -- Article.
-			when a.work_type_id in (2, 26) /* book-chapter, article */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Proceeding / Chapter.
+			when a.work_type_id in (26, 34) /* article, review */ and b.source_type_id = 3 /* journal */ then 2  -- Article / review.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id = 5 /* book series */ then 2  -- Article / review.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Conference paper / book Chapter.
 			else 1
 		end,
 	a.source_id,
