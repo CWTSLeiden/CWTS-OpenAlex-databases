@@ -421,7 +421,7 @@ drop table if exists institution_international_name
 create table institution_international_name
 (
 	institution_id bigint not null,
-	language_code varchar(11) not null,
+	language_code varchar(16) not null,
 	institution_international_name nvarchar(200) not null
 )
 go
