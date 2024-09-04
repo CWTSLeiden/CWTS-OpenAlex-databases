@@ -250,24 +250,36 @@ from #institution_from_source as a
 left join institution as b on a.institution_id = b.institution_id
 where b.institution_id is null
 
-drop table if exists #institution_from_work
-select institution_id, openalex_id, institution
-into #institution_from_work
-from
-(
-	select institution_id = replace(id, 'https://openalex.org/I', ''),
-		openalex_id = replace(id, 'https://openalex.org/', ''),
-		institution = display_name,
-		[filter] = row_number() over (partition by id order by count(*) desc, display_name)
-	from $(works_json_db_name)..work_authorship_institution
-	where patindex('https://openalex.org/I%', id) > 0
-	group by id, display_name
-) as a
-where [filter] = 1
+drop table if exists #institution_from_work1
+select distinct institution_id = replace(institution_id, 'https://openalex.org/I', ''),	openalex_id = replace(institution_id, 'https://openalex.org/', '')
+into #institution_from_work1
+from $(works_json_db_name)..work_authorship_affiliation_institution_id
 
-insert into institution with(tablock) (institution_id, openalex_id, institution)
-select a.institution_id, a.openalex_id, a.institution
-from #institution_from_work as a
+insert into institution with(tablock) (institution_id, openalex_id)
+select a.institution_id, a.openalex_id
+from #institution_from_work1 as a
+left join institution as b on a.institution_id = b.institution_id
+where b.institution_id is null
+
+drop table if exists #institution_from_work2
+select distinct institution_id = replace(id, 'https://openalex.org/I', ''), openalex_id = replace(id, 'https://openalex.org/', '')
+into #institution_from_work2
+from $(works_json_db_name)..work_authorship_institution
+
+insert into institution with(tablock) (institution_id, openalex_id)
+select a.institution_id, a.openalex_id
+from #institution_from_work2 as a
+left join institution as b on a.institution_id = b.institution_id
+where b.institution_id is null
+
+drop table if exists #institution_from_author
+select distinct institution_id = replace(institution_id, 'https://openalex.org/I', ''), openalex_id = replace(institution_id, 'https://openalex.org/', '')
+into #institution_from_author
+from $(authors_json_db_name)..author_affiliation
+
+insert into institution with(tablock) (institution_id, openalex_id)
+select a.institution_id, a.openalex_id
+from #institution_from_author as a
 left join institution as b on a.institution_id = b.institution_id
 where b.institution_id is null
 
