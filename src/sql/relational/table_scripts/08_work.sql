@@ -152,7 +152,7 @@ drop table if exists oa_status
 create table oa_status
 (
 	oa_status_id tinyint not null identity(1, 1),
-	oa_status varchar(6) not null
+	oa_status varchar(10) not null
 )
 go
 
