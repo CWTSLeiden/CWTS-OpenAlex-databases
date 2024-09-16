@@ -1,0 +1,16 @@
+cited_by_count
+created_date
+description
+display_name
+display_name_alternatives[seq]
+fields[seq].display_name
+fields[seq].id
+id
+ids.wikidata
+ids.wikipedia
+siblings[seq].display_name
+siblings[seq].id
+updated
+updated_date
+works_api_url
+works_count

@@ -1,6 +1,7 @@
 alternate_titles[seq]
 cited_by_count
 country_code
+country_id
 counts_by_year[seq].cited_by_count
 counts_by_year[seq].oa_works_count
 counts_by_year[seq].works_count

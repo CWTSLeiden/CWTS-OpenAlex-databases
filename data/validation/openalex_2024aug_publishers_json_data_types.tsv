@@ -11,8 +11,8 @@ publisher	homepage_url	varchar	115
 publisher	id	char	32
 publisher	id_ror	char	25
 publisher	id_wikidata	varchar	42
-publisher	image_thumbnail_url	nvarchar	312
-publisher	image_url	nvarchar	302
+publisher	image_thumbnail_url	nvarchar	283
+publisher	image_url	nvarchar	273
 publisher	sources_count	smallint	5
 publisher	updated_date	varchar	26
 publisher	works_count	int	10

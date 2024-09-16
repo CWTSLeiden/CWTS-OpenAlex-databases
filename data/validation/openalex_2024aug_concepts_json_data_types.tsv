@@ -1,5 +1,5 @@
 _file_information	folder	char	8
-_file_information	file	varchar	11
+_file_information	file	varchar	10
 _file_information	record_id	int	10
 concept	folder	char	8
 concept	record_id	int	10
