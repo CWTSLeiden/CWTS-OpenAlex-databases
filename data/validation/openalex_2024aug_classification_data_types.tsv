@@ -7,8 +7,6 @@ cluster_labeling	long_label	varchar	1000
 cluster_labeling	keywords	varchar	99999
 cluster_labeling	summary	varchar	99999
 cluster_labeling	wikipedia_url	varchar	200
-cluster_pub_titles	cluster_no	int	10
-cluster_pub_titles	pub_titles	nvarchar	99999
 clustering	work_id	bigint	20
 clustering	macro_cluster_id	smallint	5
 clustering	meso_cluster_id	smallint	5
@@ -147,7 +145,7 @@ pub	work_id	bigint	20
 pub	n_refs_covered	int	10
 pub	core_pub	bit	1
 pub	pub_no	bigint	20
-pub_cluster	pub_no	int	10
+pub_cluster	pub_no	bigint	20
 pub_cluster	micro_cluster_no	int	10
 pub_cluster	meso_cluster_no	int	10
 pub_cluster	macro_cluster_no	int	10
