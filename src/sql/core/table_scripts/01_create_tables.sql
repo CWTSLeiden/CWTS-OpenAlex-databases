@@ -9,19 +9,19 @@ group by work_id
 create index idx_tmp_work_n_authors_work_id on #work_n_authors(work_id)
 
 
-drop table if exists #work_n_author_raw_affiliation_strings
-select work_id, n_author_raw_affiliation_strings = count(*)
-into #work_n_author_raw_affiliation_strings
-from $(relational_db_name)..work_author_raw_affiliation_string
+drop table if exists #work_n_affiliations
+select work_id, n_affiliations = count(*)
+into #work_n_affiliations
+from $(relational_db_name)..work_affiliation
 group by work_id
 
-create index idx_tmp_work_n_author_raw_affiliation_strings_work_id on #work_n_author_raw_affiliation_strings(work_id)
+create index idx_tmp_work_n_affiliations_work_id on #work_n_affiliations(work_id)
 
 
 drop table if exists #work_country
 select work_id, country_code = country_iso_alpha2_code
 into #work_country
-from $(relational_db_name)..work_institution as a
+from $(relational_db_name)..work_affiliation_institution as a
 join $(relational_db_name)..institution as b on a.institution_id = b.institution_id
 where b.country_iso_alpha2_code is not null
 union
@@ -46,7 +46,7 @@ select a.work_id,
 	a.pub_year,
 	a.language_iso2_code,
 	n_authors = isnull(c.n_authors, 0),
-	n_author_raw_affiliation_strings = isnull(d.n_author_raw_affiliation_strings, 0),
+	n_affiliations = isnull(d.n_affiliations, 0),
 	n_countries = isnull(e.n_countries, 0),
 	a.n_refs,
 	a.n_cits,
@@ -55,7 +55,7 @@ into #work
 from $(relational_db_name)..work as a
 left join $(relational_db_name)..[source] as b on a.source_id = b.source_id
 left join #work_n_authors as c on a.work_id = c.work_id
-left join #work_n_author_raw_affiliation_strings as d on a.work_id = d.work_id
+left join #work_n_affiliations as d on a.work_id = d.work_id
 left join #work_n_countries as e on a.work_id = e.work_id
 where a.pub_year >= ($(core_min_pub_year_core_pubs) - 5)
 
@@ -107,7 +107,7 @@ drop table if exists #work_step4
 select *
 into #work_step4
 from #work_step3
-where n_author_raw_affiliation_strings > 0
+where n_affiliations > 0
 
 
 -- Step 5: Exclude works that do not have any references.

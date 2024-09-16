@@ -66,18 +66,24 @@ alter table #author_et_al add constraint pk_tmp_author_et_al primary key(work_id
 drop table if exists #work_institution
 select 
 	work_id,
-	institution_seq,
-	institution_id,
-	institution_seq2 = row_number() over (partition by work_id order by institution_seq)
+	institution_seq = row_number() over (partition by work_id order by min(affiliation_institution_seq)),
+	institution_id	
 into #work_institution
-from work_institution
-where institution_id is not null
+from
+(
+	select
+		work_id,
+		affiliation_institution_seq = row_number() over (partition by work_id order by affiliation_seq, institution_seq),
+		institution_id
+	from work_affiliation_institution
+) as a
+group by work_id, institution_id
 
 -- If a publication has eight or more institutions, list the names of the first six institutions followed by an ellipsis and then the last institutions' name.
 drop table if exists #work_last_institution_seq
 select 
 	work_id, 
-	last_institution_seq = max(institution_seq2)
+	last_institution_seq = max(institution_seq)
 into #work_last_institution_seq
 from #work_institution
 group by work_id
@@ -86,15 +92,15 @@ update a
 set a.institution_id = -1
 from #work_institution as a
 join #work_last_institution_seq as b on a.work_id = b.work_id
-where b.last_institution_seq > 7 and a.institution_seq2 = 7
+where b.last_institution_seq > 7 and a.institution_seq = 7
 
 delete a
 from #work_institution as a
 join #work_last_institution_seq as b on a.work_id = b.work_id
-where b.last_institution_seq > 8 and a.institution_seq2 between 8 and (b.last_institution_seq - 1)
+where b.last_institution_seq > 8 and a.institution_seq between 8 and (b.last_institution_seq - 1)
 
 drop table if exists #work_last_institution_seq
-create index #work_institution on #work_institution(work_id, institution_seq2, institution_id)
+create index #work_institution on #work_institution(work_id, institution_seq, institution_id)
 
 drop table if exists #institution_first
 select 
@@ -103,18 +109,18 @@ select
 into #institution_first
 from #work_institution as a
 join institution as b on a.institution_id = b.institution_id
-where a.institution_seq2 = 1
+where a.institution_seq = 1
 
 alter table #institution_first add constraint pk_tmp_institution_first primary key(work_id)
 
 drop table if exists #institution_et_al
 select 
 	a.work_id,
-	institution_et_al = nullif(string_agg(isnull(b.institution, '...'), '; ') within group (order by a.institution_seq2), '')
+	institution_et_al = nullif(string_agg(isnull(b.institution, '...'), '; ') within group (order by a.institution_seq), '')
 into #institution_et_al
 from #work_institution as a
 left join institution as b on a.institution_id = b.institution_id
-where a.institution_seq2 > 1
+where a.institution_seq > 1
 group by a.work_id
 
 drop table if exists #institution
