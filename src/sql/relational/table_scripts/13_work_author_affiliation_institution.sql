@@ -421,3 +421,4 @@ group by work_id, affiliation_seq, institution_id
 alter table work_affiliation_institution add constraint pk_work_affiliation_institution primary key(work_id, affiliation_seq, institution_seq)
 alter table work_affiliation_institution add constraint fk_work_affiliation_institution_work_id_work_work_id foreign key(work_id) references work(work_id)
 alter table work_affiliation_institution add constraint fk_work_affiliation_institution_work_id_affiliation_seq_work_affiliation_work_id_affiliation_seq foreign key(work_id, affiliation_seq) references work_affiliation(work_id, affiliation_seq)
+alter table work_affiliation_institution add constraint fk_work_affiliation_institution_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)

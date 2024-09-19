@@ -193,6 +193,7 @@ join $(sources_json_db_name)..source_society as b on a.folder = b.folder and a.r
 
 alter table source_society add constraint pk_source_society primary key(source_id, society_seq)
 create index idx_source_society_society on source_society(society)
+alter table source_society add constraint fk_source_society_source_id_source_source_id foreign key(source_id) references [source](source_id)
 
 
 
