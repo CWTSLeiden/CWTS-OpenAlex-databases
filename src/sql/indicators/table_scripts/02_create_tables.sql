@@ -74,7 +74,7 @@ drop table if exists #pub_oa
 select
 	a.work_id,
 	is_oa,
-	is_gold_oa = cast(case when oa_status_id = 3 then 1 else 0 end as bit),
+	is_gold_oa = cast(case when oa_status_id in (3, 6) then 1 else 0 end as bit),
 	is_hybrid_oa = cast(case when oa_status_id = 5 then 1 else 0 end as bit),
 	is_bronze_oa = cast(case when oa_status_id = 1 then 1 else 0 end as bit),
 	is_green_oa = cast(case when oa_status_id = 4 then 1 when b.work_id is not null then 1 else 0 end as bit)
