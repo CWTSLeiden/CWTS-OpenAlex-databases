@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+type: "software"
+authors:
+  - family-names: "Van Eck"
+    given-names: "Nees Jan"
+    orcid: "https://orcid.org/0000-0001-8448-4521"
+    email: "ecknjpvan@cwts.leidenuniv.nl"
+    affiliation: "Centre for Science and Technology Studies (CWTS), Leiden University"
+  - family-names: "Van den Boomen"
+    given-names: "Bram"
+    orcid: "https://orcid.org/0009-0005-5127-1200"
+    email: "b.van.den.boomen@cwts.leidenuniv.nl"
+    affiliation: "Centre for Science and Technology Studies (CWTS), Leiden University"
+title: "CWTS-OpenAlex-databases"
+abstract: "This repository contains the source code used by CWTS to extract, transform, and load data from OpenAlex into a Microsoft SQL Server database system."
+keywords:
+  - Centre for Science and Technology Studies
+  - CWTS
+  - database system
+  - ETL (Extract, Transform, Load)
+  - ETL pipeline
+  - JSON
+  - OpenAlex
+  - relational database
+  - SQL
+  - SQL Server
+url: "https://github.com/CWTSLeiden/CWTS-OpenAlex-databases#readme"
+repository-code: "https://github.com/CWTSLeiden/CWTS-OpenAlex-databases"
+license: MIT
+version: 2023nov
+date-released: 2024-01-30
