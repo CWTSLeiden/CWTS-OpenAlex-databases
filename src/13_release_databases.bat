@@ -34,10 +34,14 @@ echo Choose databases to release (option numbers, <space> separated)
 echo Option 0: all
 echo Option 1: %authors_json_db_name%
 echo           %concepts_json_db_name%
+echo           %domains_json_db_name%
+echo           %fields_json_db_name%
 echo           %funders_json_db_name%
 echo           %institutions_json_db_name%
 echo           %publishers_json_db_name%
 echo           %sources_json_db_name%
+echo           %subfields_json_db_name%
+echo           %topics_json_db_name%
 echo           %works_json_db_name%
 echo Option 2: %relational_db_name%
 echo Option 3: %text_db_name%
@@ -90,6 +94,14 @@ call %functions%\set_database_file_limits.bat ^
     %json_sql_log_folder%\concepts
 
 call %functions%\set_database_file_limits.bat ^
+    %domains_json_db_name% ^
+    %json_sql_log_folder%\domains
+
+call %functions%\set_database_file_limits.bat ^
+    %fields_json_db_name% ^
+    %json_sql_log_folder%\fields
+
+call %functions%\set_database_file_limits.bat ^
     %funders_json_db_name% ^
     %json_sql_log_folder%\funders
 
@@ -104,6 +116,14 @@ call %functions%\set_database_file_limits.bat ^
 call %functions%\set_database_file_limits.bat ^
     %sources_json_db_name% ^
     %json_sql_log_folder%\sources
+
+call %functions%\set_database_file_limits.bat ^
+    %subfields_json_db_name% ^
+    %json_sql_log_folder%\subfields
+
+call %functions%\set_database_file_limits.bat ^
+    %topics_json_db_name% ^
+    %json_sql_log_folder%\topics
 
 call %functions%\set_database_file_limits.bat ^
     %works_json_db_name% ^

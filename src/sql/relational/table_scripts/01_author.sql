@@ -3,7 +3,6 @@ set nocount on
 drop table if exists #author
 select a.author_id,
 	author = b.display_name,
-	last_known_institution_id = replace(b.last_known_institution_id, 'https://openalex.org/I', ''),
 	orcid = $(etl_db_name).dbo.regex_replace(b.id_orcid, '(https://orcid.org/)|[/]|[ ]', ''),
 	openalex_id = 'A' + cast(a.author_id as varchar(10)),
 	scopus_id = $(etl_db_name).dbo.regex_replace(b.id_scopus, '^(.*author[Ii][Dd]=)(.*?)([0-9]+)(.*?)$', '$3'),
@@ -22,7 +21,6 @@ create table author
 (
 	author_id bigint not null,
 	author nvarchar(max) null,
-	last_known_institution_id bigint null,
 	orcid char(19) null,
 	openalex_id varchar(11) not null,
 	scopus_id bigint null,
@@ -35,7 +33,6 @@ go
 insert into author with(tablock)
 select author_id,
 	author,
-	last_known_institution_id,
 	case when len(orcid) = 19 then orcid else null end,
 	openalex_id,
 	try_cast(scopus_id as bigint),
@@ -54,7 +51,6 @@ select author_id, openalex_id
 from author
 
 alter table author add constraint pk_author primary key(author_id)
-create index idx_author_last_known_institution_id on author(last_known_institution_id)
 create index idx_author_orcid on author(orcid)
 create index idx_author_openalex_id on author(openalex_id)
 create index idx_author_scopus_id on author(scopus_id)

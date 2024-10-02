@@ -29,10 +29,14 @@ echo Choose databases to shrink (names or numbers [space] separated)
 echo Option 0: all
 echo Option 1: %authors_json_db_name%
 echo           %concepts_json_db_name%
+echo           %domains_json_db_name%
+echo           %fields_json_db_name%
 echo           %funders_json_db_name%
 echo           %institutions_json_db_name%
 echo           %publishers_json_db_name%
 echo           %sources_json_db_name%
+echo           %subfields_json_db_name%
+echo           %topics_json_db_name%
 echo           %works_json_db_name%
 echo Option 2: %relational_db_name%
 echo Option 3: %text_db_name%
@@ -88,6 +92,14 @@ call %functions%\shrink_database.bat ^
     %json_sql_log_folder%\concepts
 
 call %functions%\shrink_database.bat ^
+    %domains_json_db_name% ^
+    %json_sql_log_folder%\domains
+
+call %functions%\shrink_database.bat ^
+    %fields_json_db_name% ^
+    %json_sql_log_folder%\fields
+
+call %functions%\shrink_database.bat ^
     %funders_json_db_name% ^
     %json_sql_log_folder%\funders
 
@@ -102,6 +114,14 @@ call %functions%\shrink_database.bat ^
 call %functions%\shrink_database.bat ^
     %sources_json_db_name% ^
     %json_sql_log_folder%\sources
+
+call %functions%\shrink_database.bat ^
+    %subfields_json_db_name% ^
+    %json_sql_log_folder%\subfields
+
+call %functions%\shrink_database.bat ^
+    %topics_json_db_name% ^
+    %json_sql_log_folder%\topics
 
 call %functions%\shrink_database.bat ^
     %works_json_db_name% ^

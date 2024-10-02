@@ -29,21 +29,21 @@ call %functions%\run_sql_script.bat ^
     %indicators_db_name% ^
     %indicators_sql_src_folder%\create_func_constants.sql ^
     %indicators_sql_log_folder% ^
-    ""
+    "-v indicators_max_pub_year=%indicators_max_pub_year%"
 call %functions%\check_errors.bat
 
 call %functions%\run_sql_folder.bat ^
     %indicators_db_name% ^
     %indicators_sql_src_folder%\table_scripts ^
     %indicators_sql_log_folder% ^
-    "-v relational_db_name=%relational_db_name% indicators_min_pub_year=%indicators_min_pub_year%"
+    "-v relational_db_name=%relational_db_name% core_db_name=%core_db_name% classification_db_name=%classification_db_name% indicators_min_pub_year=%indicators_min_pub_year%"
 call %functions%\check_errors.bat
 
 call %functions%\run_sql_folder.bat ^
     %indicators_db_name% ^
     %indicators_sql_src_folder%\stored_procedures ^
     %indicators_sql_log_folder% ^
-    "-v relational_db_name=%relational_db_name% indicators_min_pub_year=%indicators_min_pub_year% indicators_max_pub_year=%indicators_max_pub_year%"
+    "-v indicators_min_pub_year=%indicators_min_pub_year%"
 call %functions%\check_errors.bat
 
 call %functions%\validate_database.bat   %indicators_db_name%

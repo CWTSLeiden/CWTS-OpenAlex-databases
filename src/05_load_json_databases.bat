@@ -40,6 +40,64 @@ call %functions%\bcp_data.bat ^
 call %functions%\validate_database.bat   %concepts_json_db_name%
 call %functions%\validate_data_types.bat %concepts_json_db_name%
 
+:: DOMAINS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %domains_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\domains
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %domains_json_db_name% ^
+    %process_folder%\domains\create_tables.sql ^
+    %json_sql_log_folder%\domains ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %domains_json_db_name% ^
+    %json_sql_log_folder%\domains
+
+call %functions%\bcp_data.bat ^
+    %domains_json_db_name% ^
+    %process_folder%\domains ^
+    %bcp_log_folder%\domains
+
+call %functions%\validate_database.bat   %domains_json_db_name%
+call %functions%\validate_data_types.bat %domains_json_db_name%
+
+:: FIELDS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %fields_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\fields
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %fields_json_db_name% ^
+    %process_folder%\fields\create_tables.sql ^
+    %json_sql_log_folder%\fields ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %fields_json_db_name% ^
+    %json_sql_log_folder%\fields
+
+call %functions%\bcp_data.bat ^
+    %fields_json_db_name% ^
+    %process_folder%\fields ^
+    %bcp_log_folder%\fields
+
+call %functions%\validate_database.bat   %fields_json_db_name%
+call %functions%\validate_data_types.bat %fields_json_db_name%
+
 :: FUNDERS ------------------------------------------------------------------------------
 
 set db_filegrowth=1GB
@@ -155,6 +213,64 @@ call %functions%\bcp_data.bat ^
 
 call %functions%\validate_database.bat   %sources_json_db_name%
 call %functions%\validate_data_types.bat %sources_json_db_name%
+
+:: SUBFIELDS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %subfields_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\subfields
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %subfields_json_db_name% ^
+    %process_folder%\subfields\create_tables.sql ^
+    %json_sql_log_folder%\subfields ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %subfields_json_db_name% ^
+    %json_sql_log_folder%\subfields
+
+call %functions%\bcp_data.bat ^
+    %subfields_json_db_name% ^
+    %process_folder%\subfields ^
+    %bcp_log_folder%\subfields
+
+call %functions%\validate_database.bat   %subfields_json_db_name%
+call %functions%\validate_data_types.bat %subfields_json_db_name%
+
+:: TOPICS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %topics_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\topics
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %topics_json_db_name% ^
+    %process_folder%\topics\create_tables.sql ^
+    %json_sql_log_folder%\topics ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %topics_json_db_name% ^
+    %json_sql_log_folder%\topics
+
+call %functions%\bcp_data.bat ^
+    %topics_json_db_name% ^
+    %process_folder%\topics ^
+    %bcp_log_folder%\topics
+
+call %functions%\validate_database.bat   %topics_json_db_name%
+call %functions%\validate_data_types.bat %topics_json_db_name%
 
 :: AUTHORS ------------------------------------------------------------------------------
 

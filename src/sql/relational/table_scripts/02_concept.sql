@@ -167,7 +167,7 @@ drop table if exists concept_international_description
 create table concept_international_description
 (
 	concept_id bigint not null,
-	language_code varchar(11) not null,
+	language_code varchar(16) not null,
 	concept_international_description nvarchar(800) not null
 )
 go

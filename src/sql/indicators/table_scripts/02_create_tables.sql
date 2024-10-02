@@ -9,19 +9,19 @@ group by work_id
 create index idx_tmp_pub_n_authors_work_id on #pub_n_authors(work_id)
 
 
-drop table if exists #pub_n_author_raw_affiliation_strings
-select work_id, n_author_raw_affiliation_strings = count(*)
-into #pub_n_author_raw_affiliation_strings
-from $(relational_db_name)..work_author_raw_affiliation_string
+drop table if exists #pub_n_affiliations
+select work_id, n_affiliations = count(*)
+into #pub_n_affiliations
+from $(relational_db_name)..work_affiliation
 group by work_id
 
-create index idx_tmp_pub_n_author_raw_affiliation_strings_work_id on #pub_n_author_raw_affiliation_strings(work_id)
+create index idx_tmp_pub_n_affiliations_work_id on #pub_n_affiliations(work_id)
 
 
 drop table if exists #pub_n_institutions
 select work_id, n_institutions = count(distinct institution_id)
 into #pub_n_institutions
-from $(relational_db_name)..work_institution
+from $(relational_db_name)..work_affiliation_institution
 where institution_id is not null
 group by work_id
 
@@ -42,7 +42,7 @@ where country_iso_alpha2_code in ('cn', 'hk', 'mo')
 drop table if exists #pub_country
 select a.work_id, country_code = c.cleaned_country_iso_alpha2_code
 into #pub_country
-from $(relational_db_name)..work_institution as a
+from $(relational_db_name)..work_affiliation_institution as a
 join $(relational_db_name)..institution as b on a.institution_id = b.institution_id
 join #country as c on b.country_iso_alpha2_code = c.country_iso_alpha2_code
 union
@@ -63,7 +63,7 @@ create index idx_tmp_pub_n_countries_work_id on #pub_n_countries(work_id)
 drop table if exists #pub_industry
 select distinct a.work_id
 into #pub_industry
-from $(relational_db_name)..work_institution as a
+from $(relational_db_name)..work_affiliation_institution as a
 join $(relational_db_name)..institution as b on a.institution_id = b.institution_id
 where b.institution_type_id = 2  -- Company.
 
@@ -74,7 +74,7 @@ drop table if exists #pub_oa
 select
 	a.work_id,
 	is_oa,
-	is_gold_oa = cast(case when oa_status_id = 3 then 1 else 0 end as bit),
+	is_gold_oa = cast(case when oa_status_id in (3, 6) then 1 else 0 end as bit),
 	is_hybrid_oa = cast(case when oa_status_id = 5 then 1 else 0 end as bit),
 	is_bronze_oa = cast(case when oa_status_id = 1 then 1 else 0 end as bit),
 	is_green_oa = cast(case when oa_status_id = 4 then 1 when b.work_id is not null then 1 else 0 end as bit)
@@ -96,7 +96,7 @@ create index idx_tmp_pub_oa_work_id on #pub_oa(work_id)
 drop table if exists #pub_coordinates
 select a.work_id, latitude = b.latitude * pi() / 180, longitude = b.longitude * pi() / 180
 into #pub_coordinates
-from $(relational_db_name)..work_institution as a
+from $(relational_db_name)..work_affiliation_institution as a
 join $(relational_db_name)..institution as b on a.institution_id = b.institution_id
 where b.latitude is not null
 	and b.longitude is not null
@@ -118,14 +118,14 @@ select a.work_id,
 	work_no = row_number() over (order by a.work_id),
 	doc_type_no =
 		case
-			when a.work_type_id = 26 /* article */ and b.source_type_id = 3 /* journal */ then 2  -- Article.
-			when a.work_type_id in (2, 26) /* book-chapter, article */ and b.source_type_id = 5 /* book series */ then 2  -- Article.
-			when a.work_type_id in (2, 26) /* book-chapter, article */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Proceeding / Chapter.
+			when a.work_type_id in (26, 34) /* article, review */ and b.source_type_id = 3 /* journal */ then 2  -- Article / review.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id = 5 /* book series */ then 2  -- Article / review.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Conference paper / book Chapter.
 			else 1
 		end,
 	a.source_id,
 	a.pub_year,
-	has_required_metadata = cast(case when a.source_id is not null and isnull(d.n_authors, 0) > 0 and isnull(e.n_author_raw_affiliation_strings, 0) > 0 and a.n_refs > 0 then 1 else 0 end as bit),
+	has_required_metadata = cast(case when a.source_id is not null and isnull(d.n_authors, 0) > 0 and isnull(e.n_affiliations, 0) > 0 and a.n_refs > 0 then 1 else 0 end as bit),
 	n_authors = isnull(d.n_authors, 1),
 	n_institutions = isnull(f.n_institutions, 1),
 	n_countries = isnull(g.n_countries, 1),
@@ -141,7 +141,7 @@ into #pub
 from $(relational_db_name)..work as a
 left join $(relational_db_name)..[source] as b on a.source_id = b.source_id
 left join #pub_n_authors as d on a.work_id = d.work_id
-left join #pub_n_author_raw_affiliation_strings as e on a.work_id = e.work_id
+left join #pub_n_affiliations as e on a.work_id = e.work_id
 left join #pub_n_institutions as f on a.work_id = f.work_id
 left join #pub_n_countries as g on a.work_id = g.work_id
 left join #pub_industry as h on a.work_id = h.work_id
