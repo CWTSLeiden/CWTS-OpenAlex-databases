@@ -5,7 +5,10 @@ call settings.bat
 :: =======================================================================================
 :: Main
 :: =======================================================================================
+
 set export_table_include_types=false
+set export_table_sqlcmd_variables="relational_db_name=%relational_db_name%"
+set zip_append=true
 
 call :export_folder ^
     %leiden_ranking_db_name% ^
@@ -52,7 +55,6 @@ for /f %%f in ('dir /b /ON "%export_sql_folder%\*.sql"') do (
         %log_folder%
 )
 
-set zip_append=true
 if exist %archive_file% (
     del %archive_file%
 )
