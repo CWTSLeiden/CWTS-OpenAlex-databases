@@ -148,7 +148,7 @@ select a.institution_id,
 	b.homepage_url,
 	is_super_system = case when b.is_super_system = 'true' then 1 when b.is_super_system = 'false' then 0 else null end,
 	ror_id = replace(b.id_ror, 'https://ror.org/', ''),
-	grid_id = b.id_grid,
+	grid_id = case when len(b.id_grid) <= 13 then b.id_grid else null end,
 	openalex_id = 'I' + cast(a.institution_id as varchar(10)),
 	mag_id = b.id_mag,
 	wikidata_id = replace(b.id_wikidata, 'https://www.wikidata.org/wiki/', ''),
@@ -239,7 +239,7 @@ drop table if exists institution_relationship_type
 create table institution_relationship_type
 (
 	institution_relationship_type_id smallint not null identity(1, 1),
-	institution_relationship_type varchar(10) not null
+	institution_relationship_type varchar(11) not null
 )
 go
 

@@ -8,11 +8,11 @@ create table funder
 	funder nvarchar(200) null,
 	country_iso_alpha2_code char(2) null,
 	[description] nvarchar(250) null,
-	homepage_url varchar(200) null,
+	homepage_url varchar(600) null,
 	ror_id varchar(9) null,
 	openalex_id varchar(11) not null,
 	wikidata_id varchar(10) null,
-	image_url varchar(700) null,
+	image_url varchar(800) null,
 	thumbnail_url varchar(1200) null,
 	updated_date date null,
 	created_date datetime2 null

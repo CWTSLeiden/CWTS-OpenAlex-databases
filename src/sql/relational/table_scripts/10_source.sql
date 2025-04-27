@@ -43,7 +43,7 @@ create table [source]
 (
 	source_id bigint not null,
 	[source] nvarchar(800) null,
-	abbreviation nvarchar(100) null,
+	abbreviation nvarchar(200) null,
 	source_type_id smallint null,
 	country_iso_alpha2_code char(2) null,
 	host_organization_publisher_id bigint null,
@@ -70,7 +70,7 @@ select a.source_id,
 	country_iso_alpha2_code = isnull(d.country_iso2_code, b.country_code),
 	host_organization_publisher_id = case when patindex('https://openalex.org/P%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/P', '') else null end,
 	host_organization_institution_id = case when patindex('https://openalex.org/I%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/I', '') else null end,
-	b.homepage_url,
+	homepage_url = case when len(b.homepage_url) <= 600 then b.homepage_url else null end,
 	issn_l = case when len(b.id_issn_l) = 9 then b.id_issn_l else null end,
 	openalex_id = 'S' + cast(a.source_id as varchar(10)),
 	mag_id = b.id_mag,
@@ -144,7 +144,7 @@ go
 insert into source_issn with(tablock)
 select a.source_id,
 	b.issn_seq,
-	issn = replace(issn, ' ', '')
+	issn = issn = replace(replace(issn, 'issn-l: ', ''), ' ', '')
 from _source as a
 join $(sources_json_db_name)..source_issn as b on a.folder = b.folder and a.record_id = b.record_id
 
@@ -183,7 +183,7 @@ create table source_society
 	source_id bigint not null,
 	society_seq smallint not null,
 	society nvarchar(500) not null,
-	homepage_url varchar(250) null
+	homepage_url varchar(600) null
 )
 go
 
