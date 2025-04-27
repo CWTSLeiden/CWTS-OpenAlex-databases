@@ -67,7 +67,7 @@ select a.source_id,
 	b.display_name,
 	b.abbreviated_title,
 	c.source_type_id,
-	b.country_code,
+	country_iso_alpha2_code = isnull(d.country_iso2_code, b.country_code),
 	host_organization_publisher_id = case when patindex('https://openalex.org/P%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/P', '') else null end,
 	host_organization_institution_id = case when patindex('https://openalex.org/I%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/I', '') else null end,
 	b.homepage_url,
@@ -84,6 +84,7 @@ select a.source_id,
 from _source as a
 join $(sources_json_db_name)..[source] as b on a.folder = b.folder and a.record_id = b.record_id
 left join source_type as c on b.[type] = c.source_type
+left join $(geonames_db_name)..country as d on b.country_code = d.country_iso3_code
 order by len(replace(replace(b.id_wikidata, 'https://www.wikidata.org/entity/', ''), 'http://www.wikidata.org/entity/', '')) desc
 
 drop table if exists #source_from_work
