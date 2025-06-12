@@ -22,7 +22,7 @@ set a.city = b.city
 from city as a
 join
 (
-	select geonames_city_id = geo_geonames_city_id, city = geo_city, [filter] = row_number() over (partition by geo_geonames_city_id order by count(*) desc)
+	select geonames_city_id = geo_geonames_city_id, city = geo_city, [filter] = row_number() over (partition by geo_geonames_city_id order by count(*) desc, geo_city asc)
 	from $(institutions_json_db_name)..institution
 	where geo_geonames_city_id is not null
 		and geo_city is not null
