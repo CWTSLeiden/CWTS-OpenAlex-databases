@@ -9,7 +9,7 @@ institution	created_date	datetime	23
 institution	display_name	nvarchar	191
 institution	homepage_url	nvarchar	582
 institution	id	varchar	32
-institution	image_thumbnail_url	varchar	907
+institution	image_thumbnail_url	varchar	923
 institution	image_url	varchar	691
 institution	type	varchar	10
 institution	updated_date	char	26
@@ -21,8 +21,8 @@ institution	geo_country_code	char	2
 institution	geo_geonames_city_id	int	10
 institution	geo_latitude	float	309
 institution	geo_longitude	float	309
-institution	geo_region	nvarchar	28
-institution	id_grid	varchar	13
+institution	geo_region	varchar	20
+institution	id_grid	varchar	19
 institution	id_mag	bigint	20
 institution	id_ror	char	25
 institution	id_wikidata	varchar	40
@@ -31,7 +31,7 @@ institution_associated_institution	folder	char	12
 institution_associated_institution	record_id	int	10
 institution_associated_institution	associated_institution_seq	smallint	5
 institution_associated_institution	id	varchar	32
-institution_associated_institution	relationship	varchar	7
+institution_associated_institution	relationship	varchar	11
 institution_display_name_acronym	folder	char	12
 institution_display_name_acronym	record_id	int	10
 institution_display_name_acronym	display_name_acronym_seq	smallint	5

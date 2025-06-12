@@ -6,7 +6,7 @@ topic	record_id	smallint	5
 topic	cited_by_count	int	10
 topic	created_date	datetime	23
 topic	description	nvarchar	828
-topic	display_name	nvarchar	102
+topic	display_name	nvarchar	83
 topic	id	char	27
 topic	updated_date	char	26
 topic	works_count	int	10

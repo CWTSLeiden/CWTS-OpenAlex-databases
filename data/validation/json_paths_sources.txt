@@ -28,6 +28,7 @@ ids.openalex
 ids.wikidata
 is_core
 is_in_doaj
+is_indexed_in_scopus
 is_oa
 issn
 issn[seq]

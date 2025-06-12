@@ -1,5 +1,5 @@
 _file_information	folder	smallint	5
-_file_information	file	varchar	10
+_file_information	file	varchar	11
 _file_information	record_id	int	10
 author	folder	smallint	5
 author	record_id	int	10
@@ -9,7 +9,7 @@ author	display_name	nvarchar	100
 author	id	char	32
 author	updated_date	varchar	26
 author	works_count	int	10
-author	id_orcid	varchar	37
+author	id_orcid	varchar	55
 author	id_scopus	nvarchar	110
 author	id_twitter	varchar	100
 author	id_wikipedia	varchar	68
