@@ -995,19 +995,19 @@ create table [data_source]
 )
 go
 
---if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
---begin
---	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'data_source')
---	begin
---		set identity_insert [data_source] on
+if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
+begin
+	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'data_source')
+	begin
+		set identity_insert [data_source] on
 
---		insert into [data_source] with(tablock) (data_source_id, [data_source])
---		select data_source_id, [data_source]
---		from $(previous_relational_db_name)..[data_source]
+		insert into [data_source] with(tablock) (data_source_id, [data_source])
+		select data_source_id, [data_source]
+		from $(previous_relational_db_name)..[data_source]
 
---		set identity_insert [data_source] off
---	end
---end
+		set identity_insert [data_source] off
+	end
+end
 
 insert into [data_source] with(tablock)
 select [data_source] = indexed_in
