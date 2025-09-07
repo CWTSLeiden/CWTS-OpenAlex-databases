@@ -49,6 +49,8 @@ set dba_db_name=cwtsdb_dba
 set geonames_db_name=geonames_2025jul
 set ror_db_name=ror_2025aug
 
+set previous_text_db_name=openalex_%previous_db_version%_text
+
 :: ---------------------------------------------------------------------------------------
 :: Classification Settings
 :: ---------------------------------------------------------------------------------------

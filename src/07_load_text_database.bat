@@ -25,7 +25,7 @@ call %functions%\load_database.bat ^
     %text_db_name% ^
     %text_sql_src_folder% ^
     %text_sql_log_folder% ^
-    "-v relational_db_name=%relational_db_name%"
+    "-v relational_db_name=%relational_db_name% previous_text_db_name=%previous_text_db_name%"
 call %functions%\check_errors.bat
 
 call %functions%\validate_database.bat   %text_db_name%
