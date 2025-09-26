@@ -118,10 +118,11 @@ select a.work_id,
 	work_no = row_number() over (order by a.work_id),
 	doc_type_no =
 		case
-			when a.work_type_id in (26, 34) /* article, review */ and b.source_type_id = 3 /* journal */ then 2  -- Article / review.
-			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id = 5 /* book series */ then 2  -- Article / review.
-			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Conference paper / book Chapter.
-			else 1
+			when a.work_type_id in (26, 34) /* article, review */ and b.source_type_id = 3 /* journal */ then 2  -- Journal article / journal review / book chapter in book series.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id = 5 /* book series */ then 2  -- Journal article / journal review / book chapter in book series.
+			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Conference paper / book chapter in book.
+			when a.work_type_id = 2 /* book-chapter */ and b.source_type_id = 3 /* journal */ then 4  -- Conference paper / book chapter in book.
+			else 1  -- Non-citable work.
 		end,
 	a.source_id,
 	a.pub_year,

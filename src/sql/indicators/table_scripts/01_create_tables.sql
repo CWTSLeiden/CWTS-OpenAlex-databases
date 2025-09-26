@@ -51,13 +51,13 @@ drop table if exists doc_type
 create table doc_type
 (
 	doc_type_no tinyint not null,
-	doc_type varchar(40) not null
+	doc_type varchar(70) not null
 )
 
 insert doc_type values
-(1, 'Non-citable item'),
-(2, 'Article / review'),
---(3, 'Letter'),
-(4, 'Conference paper / book Chapter')
+(1, 'Non-citable work'),
+(2, 'Journal article / journal review / book chapter in book series'),
+--(3, 'Journal letter'),
+(4, 'Conference paper / book chapter in book')
 
 alter table doc_type add constraint pk_doc_type primary key(doc_type_no)
