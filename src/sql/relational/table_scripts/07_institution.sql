@@ -162,6 +162,13 @@ join $(institutions_json_db_name)..institution as b on a.folder = b.folder and a
 left join institution_type as c on b.[type] = c.institution_type
 left join region as d on b.geo_region = d.region
 
+update a with(tablock)
+set a.country_iso_alpha2_code = b.country_code
+from institution as a
+join $(ror_db_name)..organization_location as b on a.ror_id = b.ror_id and b.location_seq = 1
+where a.country_iso_alpha2_code is null
+	and b.country_code is not null
+
 drop table if exists #institution_from_source
 select institution_id, openalex_id, institution
 into #institution_from_source

@@ -47,6 +47,7 @@ set works_json_db_name=openalex_%db_version%_works_json
 set etl_db_name=cwtsdb_etl
 set dba_db_name=cwtsdb_dba
 set geonames_db_name=geonames_2025jul
+set ror_db_name=ror_2025aug
 
 :: ---------------------------------------------------------------------------------------
 :: Classification Settings
