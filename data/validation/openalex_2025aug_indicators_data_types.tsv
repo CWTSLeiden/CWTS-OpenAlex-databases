@@ -57,7 +57,7 @@ database_classification_system_source_pp_top_n_cits	source_id	bigint	20
 database_classification_system_source_pp_top_n_cits	top_n_cits	int	10
 database_classification_system_source_pp_top_n_cits	pp_top_n_cits	float	309
 doc_type	doc_type_no	tinyint	3
-doc_type	doc_type	varchar	40
+doc_type	doc_type	varchar	70
 pub	work_id	bigint	20
 pub	doc_type_no	tinyint	3
 pub	source_id	bigint	20
