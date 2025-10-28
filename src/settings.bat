@@ -112,6 +112,10 @@ set json_analyzer_safe=false
 set json_analyzer_skip_paths="abstract_inverted_index,international.display_name,international.description"
 set json_analyzer_sample_lines=10000
 
+:: Export settings
+set export_table_include_header=true
+set export_table_include_types=true
+
 :: ---------------------------------------------------------------------------------------
 :: Folders
 :: ---------------------------------------------------------------------------------------
