@@ -11,7 +11,7 @@ create table main_field
 
 insert into main_field with(tablock)
 select *
-from wos_2313_classification..LR_main_field
+from $(previous_classification_db_name)..main_field
 
 alter table main_field add constraint pk_main_field primary key(main_field_id)
 

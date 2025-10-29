@@ -47,6 +47,7 @@ repositories[seq].host_organization_name
 repositories[seq].id
 repositories[seq].is_core
 repositories[seq].is_in_doaj
+repositories[seq].is_indexed_in_scopus
 repositories[seq].is_oa
 repositories[seq].issn
 repositories[seq].issn[seq]

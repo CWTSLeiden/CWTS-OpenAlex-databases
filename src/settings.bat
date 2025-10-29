@@ -4,10 +4,10 @@
 :: Pipeline settings
 :: ---------------------------------------------------------------------------------------
 
-set db_version=2024aug
-set previous_db_version=2023nov
+set db_version=2025aug
+set previous_db_version=2024aug
 set db_owner=vuw\%USERNAME%
-set database_drive_letter=G
+set database_drive_letter=H
 
 set notifications=true
 set verbose=true
@@ -46,17 +46,21 @@ set works_json_db_name=openalex_%db_version%_works_json
 :: Utility databases
 set etl_db_name=cwtsdb_etl
 set dba_db_name=cwtsdb_dba
+set geonames_db_name=geonames_2025jul
+set ror_db_name=ror_2025aug
+
+set previous_text_db_name=openalex_%previous_db_version%_text
 
 :: ---------------------------------------------------------------------------------------
 :: Classification Settings
 :: ---------------------------------------------------------------------------------------
 
-set previous_classification_db_name=openalex_%previous_db_version%_classification
+set previous_classification_db_name=openalex_2023nov_classification
 
 set classification_min_pub_year_extended_pub_set=1980
-set classification_max_pub_year_extended_pub_set=2023
+set classification_max_pub_year_extended_pub_set=2024
 set classification_min_pub_year_core_pub_set=2000
-set classification_max_pub_year_core_pub_set=2023
+set classification_max_pub_year_core_pub_set=2024
 
 :: publicationclassification
 set classification_memory=200G
@@ -89,7 +93,7 @@ set core_min_pub_year_core_pubs=%classification_min_pub_year_core_pub_set%
 :: ---------------------------------------------------------------------------------------
 
 set indicators_min_pub_year=%classification_min_pub_year_core_pub_set%
-set indicators_max_pub_year=2023
+set indicators_max_pub_year=2024
 
 :: ---------------------------------------------------------------------------------------
 :: Terminal Settings
@@ -107,6 +111,10 @@ set json_parser_folderfilecolumns=true
 set json_analyzer_safe=false
 set json_analyzer_skip_paths="abstract_inverted_index,international.display_name,international.description"
 set json_analyzer_sample_lines=10000
+
+:: Export settings
+set export_table_include_header=true
+set export_table_include_types=true
 
 :: ---------------------------------------------------------------------------------------
 :: Folders

@@ -12,8 +12,8 @@ create table concept
 	mag_id bigint null,
 	wikidata_id varchar(10) null,
 	wikipedia_url varchar(180) null,
-	image_url varchar(700) null,
-	thumbnail_url varchar(900) null,
+	image_url varchar(800) null,
+	thumbnail_url varchar(1200) null,
 	updated_date date not null,
 	created_date datetime2 not null
 )
@@ -144,7 +144,7 @@ drop table if exists concept_international_name
 create table concept_international_name
 (
 	concept_id bigint not null,
-	language_code varchar(11) not null,
+	language_code varchar(16) not null,
 	concept_international_name nvarchar(200) not null
 )
 go

@@ -19,39 +19,59 @@ call settings.bat
 :::: The classification parameter settings and the output of
 :::: publicationclassification are logged to time-stamped log files in the
 :::: folder [/log/publicationclassification].
-::: Option 2: create_labeling
+::: Option 2: copy_previous_classification
+:::: Copy the multi-level classification from the previous classification database.
+::: Option 3: complement_classification_method1
+:::: Add publications to the classification based on their outgoing and incomming 
+:::: citations.
+::: Option 4: complement_classification_method2
+:::: Add publications to the classification based on their citation linkes using
+:::: publicationclassificationcomplement.
+:::: The classification parameter settings should be specified in the
+:::: global variables %classification_*%.
+:::: The output of publicationclassificationcomplement is logged to a time-stamped
+:::: log file in the folder [/log/publicationclassificationcomplement].
+::: Option 5: create_labeling
 :::: Generate labels for the clusters of the classification using the OpenAI GPT
 :::: language model.
 :::: The classification labeling parameter settings should be specified in the
 :::: global variables %classification_*%.
 :::: The output of publicationclassificationlabeling is logged to a time-stamped
 :::: log file in the folder [/log/publicationclassificationlabeling].
-::: Option 3: table_scripts
+::: Option 6: copy_previous_labeling
+:::: Copy the labels for the clusters of the classification from the previous 
+:::: classification database.
+::: Option 7: table_scripts
 :::: Run all scripts in [src\sql\classification\table_scripts] to load data
 :::: into the classification database.
-::: Option 4: create_vosviewer_maps
+::: Option 8: create_vosviewer_maps
 :::: Generate the VOSviewer map and network file data and load it into the
 :::: classification database.
-::: Option 5: load_vosviewer_maps_only
+::: Option 9: load_vosviewer_maps_only
 :::: Load the VOSviewer map file data into the classification database.
-::: Option 6: validation
+::: Option 10: validate
 :::: Perform row-counts and data-types for the classification database.
 
 :: Input variables
 ::: 1. type_of_load
 ::::   possible values:
-::::    0 | create_database
-::::    1 | create_classification
-::::    2 | create_labeling
-::::    3 | table_scripts
-::::    4 | create_vosviewer_maps
-::::    5 | load_vosviewer_maps_only
-::::    6 | validation
+::::     0 | create_database
+::::     1 | create_classification
+::::     2 | copy_previous_classification
+::::     3 | complement_classification_method1
+::::     4 | complement_classification_method2
+::::     5 | create_labeling
+::::     6 | copy_previous_labeling
+::::     7 | table_scripts
+::::     8 | create_vosviewer_maps
+::::     9 | load_vosviewer_maps_only
+::::    10 | validate
 
 :: Executables
 ::: java_exe
 ::: powershell_exe
 ::: publicationclassification_exe
+::: publicationclassificationcomplement_exe
 ::: publicationclassificationlabeling_exe
 ::: vosviewer_exe
 :: =======================================================================================
@@ -122,7 +142,7 @@ goto:eof
 
 
 :: =======================================================================================
-:complement_classification
+:complement_classification_method1
 :: =======================================================================================
 
 call %functions%\run_sql_script.bat ^
@@ -130,6 +150,30 @@ call %functions%\run_sql_script.bat ^
     %classification_sql_src_folder%\complement_publicationclassification.sql ^
     %classification_sql_log_folder% ^
     "-v relational_db_name=%relational_db_name%"
+
+goto:eof
+:: =======================================================================================
+
+
+:: =======================================================================================
+:complement_classification_method2
+:: =======================================================================================
+
+call %functions%\run_sql_script.bat ^
+    %classification_db_name% ^
+    %classification_sql_src_folder%\create_input_tables_publicationclassificationcomplement.sql ^
+    %classification_sql_log_folder% ^
+    ""
+
+call %functions%\classification_complement_classification.bat ^
+    %classification_db_name% ^
+    %publicationclassificationcomplement_log_folder%
+
+call %functions%\run_sql_script.bat ^
+    %classification_db_name% ^
+    %classification_sql_src_folder%\complement_publicationclassification_using_publicationclassificationcomplement.sql ^
+    %classification_sql_log_folder% ^
+    ""
 
 goto:eof
 :: =======================================================================================
@@ -181,7 +225,7 @@ call %functions%\run_sql_folder.bat ^
     %classification_db_name% ^
     %classification_sql_src_folder%\table_scripts ^
     %classification_sql_log_folder% ^
-    "-v relational_db_name=%relational_db_name%"
+    "-v relational_db_name=%relational_db_name% previous_classification_db_name=%previous_classification_db_name%"
 
 call %functions%\check_errors.bat
 
@@ -247,13 +291,14 @@ echo Choose step(s) to run (option numbers, [space] separated)
 echo Option 0: create_database
 echo Option 1: create_classification
 echo Option 2: copy_previous_classification
-echo Option 3: complement_classification
-echo Option 4: create_labeling
-echo Option 5: copy_previous_labeling
-echo Option 6: table_scripts
-echo Option 7: create_vosviewer_maps
-echo Option 8: load_vosviewer_maps_only
-echo Option 9: validate
+echo Option 3: complement_classification_method1
+echo Option 4: complement_classification_method2
+echo Option 5: create_labeling
+echo Option 6: copy_previous_labeling
+echo Option 7: table_scripts
+echo Option 8: create_vosviewer_maps
+echo Option 9: load_vosviewer_maps_only
+echo Option 10: validate
 
 set /p type_of_load="Enter option: "
 
@@ -272,13 +317,14 @@ set "type_of_load=%type_of_load% "
 if not "%type_of_load:0 =%" == "%type_of_load%" ( set "run=1" && call :create_database )
 if not "%type_of_load:1 =%" == "%type_of_load%" ( set "run=1" && call :create_classification )
 if not "%type_of_load:2 =%" == "%type_of_load%" ( set "run=1" && call :copy_previous_classification )
-if not "%type_of_load:3 =%" == "%type_of_load%" ( set "run=1" && call :complement_classification )
-if not "%type_of_load:4 =%" == "%type_of_load%" ( set "run=1" && call :create_labeling )
-if not "%type_of_load:5 =%" == "%type_of_load%" ( set "run=1" && call :copy_previous_labeling )
-if not "%type_of_load:6 =%" == "%type_of_load%" ( set "run=1" && call :table_scripts )
-if not "%type_of_load:7 =%" == "%type_of_load%" ( set "run=1" && call :create_vosviewer_maps )
-if not "%type_of_load:8 =%" == "%type_of_load%" ( set "run=1" && call :load_vosviewer_maps )
-if not "%type_of_load:9 =%" == "%type_of_load%" ( set "run=1" && call :validate )
+if not "%type_of_load:3 =%" == "%type_of_load%" ( set "run=1" && call :complement_classification_method1 )
+if not "%type_of_load:4 =%" == "%type_of_load%" ( set "run=1" && call :complement_classification_method2 )
+if not "%type_of_load:5 =%" == "%type_of_load%" ( set "run=1" && call :create_labeling )
+if not "%type_of_load:6 =%" == "%type_of_load%" ( set "run=1" && call :copy_previous_labeling )
+if not "%type_of_load:7 =%" == "%type_of_load%" ( set "run=1" && call :table_scripts )
+if not "%type_of_load:8 =%" == "%type_of_load%" ( set "run=1" && call :create_vosviewer_maps )
+if not "%type_of_load:9 =%" == "%type_of_load%" ( set "run=1" && call :load_vosviewer_maps )
+if not "%type_of_load:10 =%" == "%type_of_load%" ( set "run=1" && call :validate )
 
 if "%run%" == "0" (
     echo No valid input

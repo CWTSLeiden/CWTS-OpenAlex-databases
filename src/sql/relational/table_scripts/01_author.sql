@@ -20,9 +20,9 @@ drop table if exists author
 create table author
 (
 	author_id bigint not null,
-	author nvarchar(max) null,
+	author nvarchar(100) null,
 	orcid char(19) null,
-	openalex_id varchar(11) not null,
+	openalex_id varchar(12) not null,
 	scopus_id bigint null,
 	wikipedia_url varchar(100) null,
 	updated_date date null,
@@ -63,7 +63,7 @@ create table author_alternative_name
 (
 	author_id bigint not null,
 	alternative_name_seq smallint not null,
-	alternative_name nvarchar(255) not null
+	alternative_name nvarchar(100) not null
 )
 go
 

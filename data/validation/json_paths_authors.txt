@@ -20,7 +20,6 @@ ids.openalex
 ids.orcid
 ids.scopus
 ids.twitter
-ids.wikipedia
 last_known_institution
 last_known_institution.country_code
 last_known_institution.display_name

@@ -51,14 +51,13 @@ best_oa_location.source.host_organization_name
 best_oa_location.source.id
 best_oa_location.source.is_core
 best_oa_location.source.is_in_doaj
+best_oa_location.source.is_indexed_in_scopus
 best_oa_location.source.is_oa
 best_oa_location.source.issn
 best_oa_location.source.issn[seq]
 best_oa_location.source.issn_l
 best_oa_location.source.publisher
 best_oa_location.source.publisher_id
-best_oa_location.source.publisher_lineage[seq]
-best_oa_location.source.publisher_lineage_names[seq]
 best_oa_location.source.type
 best_oa_location.source.type_id
 best_oa_location.version
@@ -108,6 +107,14 @@ ids.openalex
 ids.pmcid
 ids.pmid
 indexed_in[seq]
+institution_assertions[seq].country_code
+institution_assertions[seq].country_id
+institution_assertions[seq].display_name
+institution_assertions[seq].id
+institution_assertions[seq].lineage[seq]
+institution_assertions[seq].ror
+institution_assertions[seq].type
+institution_assertions[seq].type_id
 institutions_distinct_count
 is_paratext
 is_retracted
@@ -136,6 +143,7 @@ locations[seq].source.host_organization_name
 locations[seq].source.id
 locations[seq].source.is_core
 locations[seq].source.is_in_doaj
+locations[seq].source.is_indexed_in_scopus
 locations[seq].source.is_oa
 locations[seq].source.issn
 locations[seq].source.issn[seq]
@@ -177,6 +185,7 @@ primary_location.source.host_organization_name
 primary_location.source.id
 primary_location.source.is_core
 primary_location.source.is_in_doaj
+primary_location.source.is_indexed_in_scopus
 primary_location.source.is_oa
 primary_location.source.issn
 primary_location.source.issn[seq]

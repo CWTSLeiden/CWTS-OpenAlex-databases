@@ -8,11 +8,11 @@ create table publisher
 	publisher nvarchar(200) null,
 	hierarchy_level smallint null,
 	parent_publisher_id bigint null,
-	homepage_url varchar(200) null,
+	homepage_url varchar(600) null,
 	ror_id varchar(9) null,
 	openalex_id varchar(11) not null,
 	wikidata_id varchar(10) null,
-	image_url varchar(700) null,
+	image_url varchar(800) null,
 	thumbnail_url varchar(1200) null,
 	updated_date date null,
 	created_date datetime2 null
@@ -94,9 +94,10 @@ go
 insert into publisher_country with(tablock)
 select a.publisher_id,
 	b.country_code_seq,
-	b.country_code
+	isnull(c.country_iso2_code, b.country_code)
 from _publisher as a
 join $(publishers_json_db_name)..publisher_country_code as b on a.folder = b.folder and a.record_id = b.record_id
+left join $(geonames_db_name)..country as c on b.country_code = c.country_iso3_code
 
 alter table publisher_country add constraint pk_publisher_country primary key(publisher_id, country_seq)
 alter table publisher_country add constraint fk_publisher_country_publisher_id_publisher_publisher_id foreign key(publisher_id) references publisher(publisher_id)
