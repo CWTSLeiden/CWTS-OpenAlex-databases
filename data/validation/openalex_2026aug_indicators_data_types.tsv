@@ -62,6 +62,8 @@ pub	work_id	bigint	20
 pub	doc_type_no	tinyint	3
 pub	source_id	bigint	20
 pub	pub_year	smallint	5
+pub	is_cwts_extended_pub	bit	1
+pub	is_cwts_core_pub	bit	1
 pub	n_authors	smallint	5
 pub	n_institutions	smallint	5
 pub	n_countries	smallint	5
@@ -83,4 +85,4 @@ pub_database	database_no	tinyint	3
 pub_database	n_refs	smallint	5
 pub_database	n_refs_covered	smallint	5
 source	source_id	bigint	20
-source	is_core_source	bit	1
+source	is_cwts_core_source	bit	1
