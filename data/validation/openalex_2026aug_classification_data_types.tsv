@@ -1,3 +1,7 @@
+_pub_cluster_complement	pub_no	bigint	20
+_pub_cluster_complement	pub_weight	bigint	20
+_pub_cluster_complement	micro_cluster_no	bigint	20
+_pub_cluster_complement	new_micro_cluster_no	bigint	20
 cit_link	pub_no1	bigint	20
 cit_link	pub_no2	bigint	20
 cit_link	cit_weight	float	309
@@ -29,7 +33,7 @@ macro_cluster_main_field	is_primary_main_field	bit	1
 macro_clusters	Macro cluster ID	smallint	5
 macro_clusters	Macro cluster number	varchar	10
 macro_clusters	Main fields	varchar	154
-macro_clusters	No. of pub. (2000-2024)	int	10
+macro_clusters	No. of pub. (2000-2025)	int	10
 macro_clusters	Avg. pub. year	float	309
 main_field	main_field_id	tinyint	3
 main_field	main_field	varchar	50
@@ -41,7 +45,7 @@ map_macro_clusters	y	float	309
 map_macro_clusters	cluster	tinyint	3
 map_macro_clusters	weight<Links>	int	10
 map_macro_clusters	weight<Total link strength>	int	10
-map_macro_clusters	weight<No. of pub. (2000-2024)>	int	10
+map_macro_clusters	weight<No. of pub. (2000-2025)>	int	10
 map_macro_clusters	score<Avg. pub. year>	float	309
 map_meso_clusters	id	smallint	5
 map_meso_clusters	label	smallint	5
@@ -51,7 +55,7 @@ map_meso_clusters	y	float	309
 map_meso_clusters	cluster	tinyint	3
 map_meso_clusters	weight<Links>	int	10
 map_meso_clusters	weight<Total link strength>	int	10
-map_meso_clusters	weight<No. of pub. (2000-2024)>	int	10
+map_meso_clusters	weight<No. of pub. (2000-2025)>	int	10
 map_meso_clusters	score<Avg. pub. year>	float	309
 map_micro_clusters	id	smallint	5
 map_micro_clusters	label	varchar	100
@@ -61,7 +65,7 @@ map_micro_clusters	y	float	309
 map_micro_clusters	cluster	tinyint	3
 map_micro_clusters	weight<Links>	int	10
 map_micro_clusters	weight<Total link strength>	int	10
-map_micro_clusters	weight<No. of pub. (2000-2024)>	int	10
+map_micro_clusters	weight<No. of pub. (2000-2025)>	int	10
 map_micro_clusters	score<Avg. pub. year>	float	309
 meso_cluster	meso_cluster_id	smallint	5
 meso_cluster	meso_cluster_no	varchar	10
@@ -90,7 +94,7 @@ meso_clusters	Meso cluster ID	smallint	5
 meso_clusters	Meso cluster number	varchar	10
 meso_clusters	Main fields	varchar	154
 meso_clusters	Sources	nvarchar	4000
-meso_clusters	No. of pub. (2000-2024)	int	10
+meso_clusters	No. of pub. (2000-2025)	int	10
 meso_clusters	Avg. pub. year	float	309
 micro_cluster	micro_cluster_id	smallint	5
 micro_cluster	micro_cluster_no	varchar	10
@@ -133,7 +137,7 @@ micro_clusters	Sources	nvarchar	4000
 micro_clusters	Keywords	varchar	1000
 micro_clusters	Summary	varchar	2000
 micro_clusters	Wikipedia	varchar	200
-micro_clusters	No. of pub. (2000-2024)	int	10
+micro_clusters	No. of pub. (2000-2025)	int	10
 micro_clusters	Avg. pub. year	float	309
 network_macro_clusters	citing_macro_cluster_id	smallint	5
 network_macro_clusters	cited_macro_cluster_id	smallint	5
