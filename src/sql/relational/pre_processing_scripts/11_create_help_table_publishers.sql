@@ -19,5 +19,5 @@ from $(publishers_json_db_name)..publisher
 alter table _publisher add constraint pk_tmp_publisher primary key(folder, record_id)
 create index idx_tmp_publisher_folder on _publisher(folder)
 create index idx_tmp_publisher_record_id on _publisher(record_id)
-create index idx_tmp_publisher_institution_id on _publisher(publisher_id)
+create index idx_tmp_publisher_publisher_id on _publisher(publisher_id)
 go

@@ -104,4 +104,3 @@ alter table domain_field add constraint pk_domain_field primary key(domain_id, f
 create index idx_domain_field_field_id on domain_field(field_id)
 alter table domain_field add constraint fk_domain_field_domain_id_domain_domain_id foreign key(domain_id) references domain(domain_id)
 alter table domain_field add constraint fk_domain_field_field_id_field_field_id foreign key(field_id) references field(field_id)
-

@@ -6,14 +6,13 @@ select a.work_id,
 	author_id = replace(b.author_id, 'https://openalex.org/A', ''),
 	b.author_position,
 	b.is_corresponding,
-	raw_author_name = cast(left(b.raw_author_name, 800) as nvarchar(800))
+	raw_author_name = cast(left(b.raw_author_name, 800) as nvarchar(800)),
+	raw_orcid = replace(b.raw_orcid, 'https://orcid.org/', '')
 into #work_author
 from _work as a
 join $(works_json_db_name)..work_authorship as b on a.folder = b.folder and a.record_id = b.record_id
 
 create clustered columnstore index idx_tmp_work_author on #work_author
-
-
 
 drop table if exists #work_author_raw_affiliation_string
 select a.work_id,
@@ -272,7 +271,8 @@ create table work_author
 	author_id bigint null,
 	author_position_id tinyint null,
 	is_corresponding_author bit null,
-	raw_author_name_id int null
+	raw_author_name_id int null,
+	raw_orcid char(19) null
 )
 go
 
@@ -282,7 +282,8 @@ select a.work_id,
 	a.author_id,
 	b.author_position_id,
 	a.is_corresponding,
-	c.raw_author_name_id
+	c.raw_author_name_id,
+	a.raw_orcid
 from #work_author as a
 left join author_position as b on a.author_position = b.author_position
 left join raw_author_name as c on a.raw_author_name = c.raw_author_name
@@ -290,7 +291,8 @@ left join raw_author_name as c on a.raw_author_name = c.raw_author_name
 alter table work_author add constraint pk_work_author primary key(work_id, author_seq)
 create index idx_work_author_author_id on work_author(author_id)
 create index idx_work_author_is_corresponding_author on work_author(is_corresponding_author)
-create index idx_work_author_raw_author_name_raw_author_name_id on work_author(raw_author_name_id)
+create index idx_work_author_raw_author_name_id on work_author(raw_author_name_id)
+create index idx_work_author_raw_orcid on work_author(raw_orcid)
 alter table work_author add constraint fk_work_author_work_id_work_work_id foreign key(work_id) references work(work_id)
 alter table work_author add constraint fk_work_author_author_id_author_author_id foreign key(author_id) references author(author_id)
 alter table work_author add constraint fk_work_author_author_position_id_author_position_author_position_id foreign key(author_position_id) references author_position(author_position_id)
@@ -381,7 +383,7 @@ join work_affiliation as b on a.work_id = b.work_id and a.raw_affiliation_string
 
 alter table work_author_affiliation add constraint pk_work_author_affiliation primary key(work_id, author_seq, affiliation_seq)
 alter table work_author_affiliation add constraint fk_work_author_affiliation_work_id_work_work_id foreign key(work_id) references work(work_id)
-alter table work_author_affiliation add constraint fk_work_author_affiliation_work_id_author_seq_pub_author_work_id_author_seq foreign key(work_id, author_seq) references work_author(work_id, author_seq)
+alter table work_author_affiliation add constraint fk_work_author_affiliation_work_id_author_seq_work_author_work_id_author_seq foreign key(work_id, author_seq) references work_author(work_id, author_seq)
 alter table work_author_affiliation add constraint fk_work_author_affiliation_work_id_affiliation_seq_work_affiliation_work_id_affiliation_seq foreign key(work_id, affiliation_seq) references work_affiliation(work_id, affiliation_seq)
 
 

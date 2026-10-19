@@ -4,13 +4,15 @@ set nocount on
 
 drop table if exists #work_author
 select 
-	work_id,
-	author_seq,
-	author_id,
-	author_seq2 = row_number() over (partition by work_id order by author_seq)
+	a.work_id,
+	a.author_seq,
+	author = isnull(c.raw_author_name, b.author),
+	author_seq2 = row_number() over (partition by a.work_id order by a.author_seq)
 into #work_author
-from work_author
-where author_id is not null
+from work_author as a
+left join author as b on a.author_id = b.author_id
+left join raw_author_name as c on a.raw_author_name_id = c.raw_author_name_id
+where isnull(a.author_id, a.raw_author_name_id) is not null
 
 -- If a publication has eight or more authors, list the names of the first six authors followed by an ellipsis and then the last author's name.
 drop table if exists #work_last_author_seq
@@ -22,7 +24,7 @@ from #work_author
 group by work_id
 
 update a
-set a.author_id = -1
+set a.author = '...'
 from #work_author as a
 join #work_last_author_seq as b on a.work_id = b.work_id
 where b.last_author_seq > 7 and a.author_seq2 = 7
@@ -33,28 +35,26 @@ join #work_last_author_seq as b on a.work_id = b.work_id
 where b.last_author_seq > 8 and a.author_seq2 between 8 and (b.last_author_seq - 1)
 
 drop table if exists #work_last_author_seq
-create index idx_tmp_work_author on #work_author(work_id, author_seq2, author_id)
+create index idx_tmp_work_author on #work_author(work_id, author_seq2)
 
 drop table if exists #author_first
 select 
-	a.work_id, 
-	author_first = b.author
+	work_id,
+	author_first = author
 into #author_first
-from #work_author as a
-join author as b on a.author_id = b.author_id
-where a.author_seq2 = 1
+from #work_author
+where author_seq2 = 1
 
 alter table #author_first add constraint pk_tmp_author_first primary key(work_id)
 
 drop table if exists #author_et_al
 select 
-	a.work_id,
-	author_et_al = nullif(string_agg(isnull(b.author, '...'), '; ') within group (order by a.author_seq2), '') 
+	work_id,
+	author_et_al = nullif(string_agg(author, '; ') within group (order by author_seq2), '') 
 into #author_et_al
-from #work_author as a
-left join author as b on a.author_id = b.author_id
-where a.author_seq2 > 1
-group by a.work_id
+from #work_author
+where author_seq2 > 1
+group by work_id
 
 drop table if exists #author
 drop table if exists #work_author
@@ -138,7 +138,7 @@ create table work_detail
 	author_first nvarchar(1000) null,
 	author_et_al nvarchar(800) null,
 	institution_first nvarchar(200) null,
-	institution_et_al nvarchar(500) null,
+	institution_et_al nvarchar(600) null,
 	title nvarchar(450) null,
 	[source] nvarchar(800) null,
 	pub_year smallint null,

@@ -15,7 +15,7 @@ returns @work_details table
 	work_id bigint,
 	ref_string nvarchar(max),
 	authors nvarchar(1000),
-	institutions nvarchar(500),
+	institutions nvarchar(800),
 	title nvarchar(450),
 	[source] nvarchar(800),
 	pub_year smallint,
@@ -23,7 +23,7 @@ returns @work_details table
 	issue nvarchar(100),
 	pages nvarchar(350),
 	doi varchar(330),
-	work_type varchar(20),
+	work_type varchar(25),
 	n_cits int,
 	n_self_cits int
 )

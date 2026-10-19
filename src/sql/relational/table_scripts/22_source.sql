@@ -1,91 +1,70 @@
 set nocount on
 
--- source_type
-drop table if exists source_type
-create table source_type
-(
-	source_type_id smallint not null identity(1, 1),
-	source_type varchar(14) not null
-)
-go
-
-if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
-begin
-	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'source_type')
-	begin
-		set identity_insert source_type on
-
-		insert into source_type with(tablock) (source_type_id, source_type)
-		select source_type_id, source_type
-		from $(previous_relational_db_name)..source_type
-
-		set identity_insert source_type off
-	end
-end
-
-insert into source_type with(tablock)
-select source_type = [type]
-from $(sources_json_db_name)..[source]
-where [type] is not null
-except
-select source_type
-from source_type
-order by source_type
-
-alter table source_type add constraint pk_source_type primary key(source_type_id)
-create index idx_source_type_source_type on source_type(source_type)
-
-
-
 -- source
 drop table if exists [source]
 create table [source]
 (
 	source_id bigint not null,
 	[source] nvarchar(800) null,
-	abbreviation nvarchar(200) null,
-	source_type_id smallint null,
+	source_type_id tinyint null,
 	country_iso_alpha2_code char(2) null,
 	host_organization_publisher_id bigint null,
 	host_organization_institution_id bigint null,
 	homepage_url varchar(600) null,
+	is_preprint_repository bit null,
 	issn_l char(9) null,
 	openalex_id varchar(11) not null,
 	mag_id bigint null,
 	wikidata_id varchar(10) null,
-	fatcat_id char(26) null,
-	is_in_doaj bit null,
+	first_publication_year smallint null,
+	last_publication_year smallint null,
 	is_oa bit null,
+	has_high_oa_rate bit null,
+	has_high_oa_rate_since_year smallint null,
+	oa_flip_year smallint null,
+	is_in_doaj bit null,
+	is_in_doaj_since_year smallint null,
+	is_in_scielo bit null,
+	is_ojs bit null,
 	apc_price_usd int null,
+	is_cwts_core_source bit null,
 	updated_date date null,
-	created_date datetime2 null
+	created_date datetime2 null	
 )
 go
 
 insert into [source] with(tablock)
 select a.source_id,
 	b.display_name,
-	b.abbreviated_title,
 	c.source_type_id,
-	country_iso_alpha2_code = isnull(d.country_iso2_code, b.country_code),
+	country_iso_alpha2_code = e.country_iso_alpha2_code,
 	host_organization_publisher_id = case when patindex('https://openalex.org/P%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/P', '') else null end,
 	host_organization_institution_id = case when patindex('https://openalex.org/I%', b.host_organization) > 0 then replace(b.host_organization, 'https://openalex.org/I', '') else null end,
 	homepage_url = case when len(b.homepage_url) <= 600 then b.homepage_url else null end,
-	issn_l = case when len(b.id_issn_l) = 9 then b.id_issn_l else null end,
+	is_preprint_repository = case when b.is_preprint_repository = 'true' then 1 when b.is_preprint_repository = 'false' then 0 else null end,
+	issn_l = case when len(b.issn_l) = 9 then b.issn_l else null end,
 	openalex_id = 'S' + cast(a.source_id as varchar(10)),
 	mag_id = b.id_mag,
 	wikidata_id = replace(replace(replace(b.id_wikidata, 'https://www.wikidata.org/entity/', ''), 'http://www.wikidata.org/entity/', ''), 'https://www.wikidata.org/wiki/', ''),
-	fatcat_id = replace(b.id_fatcat, 'https://fatcat.wiki/container/', ''),
-	b.is_in_doaj,
+	b.first_publication_year,
+	b.last_publication_year,
 	b.is_oa,
+	b.is_high_oa_rate,
+	b.is_high_oa_rate_since_year,
+	b.oa_flip_year,
+	b.is_in_doaj,
+	b.is_in_doaj_since_year,
+	b.is_in_scielo,
+	b.is_ojs,
 	b.apc_usd,
+	is_cwts_core_source = null,
 	b.updated_date,
 	b.created_date
 from _source as a
 join $(sources_json_db_name)..[source] as b on a.folder = b.folder and a.record_id = b.record_id
 left join source_type as c on b.[type] = c.source_type
 left join $(geonames_db_name)..country as d on b.country_code = d.country_iso3_code
-order by len(replace(replace(b.id_wikidata, 'https://www.wikidata.org/entity/', ''), 'http://www.wikidata.org/entity/', '')) desc
+left join country as e on isnull(d.country_iso2_code, b.country_code) = e.country_iso_alpha2_code
 
 drop table if exists #source_from_work
 select source_id, openalex_id, [source]
@@ -108,9 +87,19 @@ from #source_from_work as a
 left join [source] as b on a.source_id = b.source_id
 where b.source_id is null
 
+drop table if exists #source_from_institution
+select distinct source_id = replace(id, 'https://openalex.org/S', ''), openalex_id = replace(id, 'https://openalex.org/', ''), [source] = display_name
+into #source_from_institution
+from $(institutions_json_db_name)..institution_repository
+
+insert into [source] with(tablock) (source_id, openalex_id, [source])
+select a.source_id, a.openalex_id, a.[source]
+from #source_from_institution as a
+left join [source] as b on a.source_id = b.source_id
+where b.source_id is null
+
 alter table [source] add constraint pk_source primary key(source_id)
 create index idx_source_source on [source]([source])
-create index idx_source_abbreviation on [source](abbreviation)
 create index idx_source_source_type_id on [source](source_type_id)
 create index idx_source_country_iso_alpha2_code on [source](country_iso_alpha2_code)
 create index idx_source_host_organization_publisher_id on [source](host_organization_publisher_id)
@@ -119,7 +108,18 @@ create index idx_source_issn_l on [source](issn_l)
 create index idx_source_openalex_id on [source](openalex_id)
 create index idx_source_mag_id on [source](mag_id)
 create index idx_source_wikidata_id on [source](wikidata_id)
-create index idx_source_fatcat_id on [source](fatcat_id)
+create index idx_source_first_publication_year on [source](first_publication_year)
+create index idx_source_last_publication_year on [source](last_publication_year)
+create index idx_source_is_oa on [source](is_oa)
+create index idx_source_has_high_oa_rate on [source](has_high_oa_rate)
+create index idx_source_has_high_oa_rate_since_year on [source](has_high_oa_rate_since_year)
+create index idx_source_oa_flip_year on [source](oa_flip_year)
+create index idx_source_is_in_doaj on [source](is_in_doaj)
+create index idx_source_is_in_doaj_since_year on [source](is_in_doaj_since_year)
+create index idx_source_is_in_scielo on [source](is_in_scielo)
+create index idx_source_is_ojs on [source](is_ojs)
+create index idx_source_apc_price_usd on [source](apc_price_usd)
+create index idx_source_is_cwts_core_source on [source](is_cwts_core_source)
 alter table [source] add constraint fk_source_source_type_id_source_type_source_type_id foreign key(source_type_id) references source_type(source_type_id)
 alter table [source] add constraint fk_source_country_iso_alpha2_code_country_country_iso_alpha2_code foreign key(country_iso_alpha2_code) references country(country_iso_alpha2_code)
 alter table [source] add constraint fk_source_host_organization_publisher_id_publisher_publisher_id foreign key(host_organization_publisher_id) references publisher(publisher_id)
@@ -144,7 +144,7 @@ go
 insert into source_issn with(tablock)
 select a.source_id,
 	b.issn_seq,
-	issn = issn = replace(replace(issn, 'issn-l: ', ''), ' ', '')
+	issn = replace(replace(issn, 'issn-l: ', ''), ' ', '')
 from _source as a
 join $(sources_json_db_name)..source_issn as b on a.folder = b.folder and a.record_id = b.record_id
 
@@ -217,3 +217,23 @@ join $(sources_json_db_name)..source_apc_price as b on a.folder = b.folder and a
 alter table source_apc_price add constraint pk_source_apc_price primary key(source_id, apc_price_seq)
 create index idx_source_apc_price_currency on source_apc_price(currency)
 alter table source_apc_price add constraint fk_source_apc_price_source_id_source_source_id foreign key(source_id) references [source](source_id)
+
+
+
+-- source_apc_year_price_usd
+drop table if exists source_year_apc_price_usd
+create table source_year_apc_price_usd
+(
+	source_id bigint not null,
+	[year] smallint not null,
+	apc_price_usd int not null
+)
+go
+
+insert into source_year_apc_price_usd with(tablock)
+select a.source_id, b.[year], b.price
+from _source as a
+join $(sources_json_db_name)..source_apc_usd_by_year as b on a.folder = b.folder and a.record_id = b.record_id
+
+alter table source_year_apc_price_usd add constraint pk_source_year_apc_price_usd primary key(source_id, [year])
+alter table source_year_apc_price_usd add constraint fk_source_year_apc_price_usd_source_id_source_source_id foreign key(source_id) references [source](source_id)

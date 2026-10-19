@@ -23,7 +23,7 @@ insert into publisher with(tablock)
 select a.publisher_id,
 	b.display_name,
 	b.hierarchy_level,
-	parent_publisher_id = replace(id, 'https://openalex.org/P', ''),
+	parent_publisher_id = replace(parent_publisher_id, 'https://openalex.org/P', ''),
 	b.homepage_url,
 	ror_id = replace(b.id_ror, 'https://ror.org/', ''),
 	openalex_id = 'P' + cast(a.publisher_id as varchar(10)),
@@ -65,7 +65,7 @@ create table publisher_alternative_name
 (
 	publisher_id bigint not null,
 	alternative_name_seq smallint not null,
-	alternative_name nvarchar(150) not null
+	alternative_name nvarchar(200) not null
 )
 go
 
@@ -93,11 +93,12 @@ go
 
 insert into publisher_country with(tablock)
 select a.publisher_id,
-	b.country_code_seq,
-	isnull(c.country_iso2_code, b.country_code)
+	country_seq = row_number() over (partition by a.publisher_id order by b.country_code_seq),
+    d.country_iso_alpha2_code
 from _publisher as a
 join $(publishers_json_db_name)..publisher_country_code as b on a.folder = b.folder and a.record_id = b.record_id
 left join $(geonames_db_name)..country as c on b.country_code = c.country_iso3_code
+join country as d on isnull(c.country_iso2_code, b.country_code) = d.country_iso_alpha2_code
 
 alter table publisher_country add constraint pk_publisher_country primary key(publisher_id, country_seq)
 alter table publisher_country add constraint fk_publisher_country_publisher_id_publisher_publisher_id foreign key(publisher_id) references publisher(publisher_id)

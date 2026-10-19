@@ -40,7 +40,7 @@ drop table if exists region
 create table region
 (
 	region_id smallint not null identity(1, 1),
-	region varchar(50) not null
+	region nvarchar(50) not null
 )
 go
 
@@ -51,8 +51,9 @@ begin
 		set identity_insert region on
 
 		insert into region with(tablock) (region_id, region)
-		select region_id, region
+		select min(region_id), region
 		from $(previous_relational_db_name)..region
+		group by region
 
 		set identity_insert region off
 	end
@@ -72,40 +73,40 @@ create index idx_region_region on region(region)
 
 
 
--- institution_type
-drop table if exists institution_type
-create table institution_type
+-- institution_status
+drop table if exists institution_status
+create table institution_status
 (
-	institution_type_id smallint not null identity(1, 1),
-	institution_type varchar(10) not null
+	institution_status_id smallint not null identity(1, 1),
+	institution_status varchar(10) not null
 )
 go
 
 if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
 begin
-	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'institution_type')
+	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'institution_status')
 	begin
-		set identity_insert institution_type on
+		set identity_insert institution_status on
 
-		insert into institution_type with(tablock) (institution_type_id, institution_type)
-		select institution_type_id, institution_type
-		from $(previous_relational_db_name)..institution_type
+		insert into institution_status with(tablock) (institution_status_id, institution_status)
+		select institution_status_id, institution_status
+		from $(previous_relational_db_name)..institution_status
 
-		set identity_insert institution_type off
+		set identity_insert institution_status off
 	end
 end
 
-insert into institution_type with(tablock)
-select institution_type = [type]
+insert into institution_status with(tablock)
+select institution_status = [status]
 from $(institutions_json_db_name)..institution
-where [type] is not null
+where [status] is not null
 except
-select institution_type
-from institution_type
-order by institution_type
+select institution_status
+from institution_status
+order by institution_status
 
-alter table institution_type add constraint pk_institution_type primary key(institution_type_id)
-create index idx_institution_type_institution_type on institution_type(institution_type)
+alter table institution_status add constraint pk_institution_status primary key(institution_status_id)
+create index idx_institution_status_institution_status on institution_status(institution_status)
 
 
 
@@ -116,6 +117,7 @@ create table institution
 	institution_id bigint not null,
 	institution nvarchar(200) null,
 	institution_type_id smallint null,
+	institution_status_id smallint null,
 	country_iso_alpha2_code char(2) null,
 	region_id smallint null,
 	geonames_city_id int null,
@@ -126,11 +128,10 @@ create table institution
 	ror_id varchar(9) null,
 	grid_id varchar(13) null,
 	openalex_id varchar(11) not null,
-	mag_id bigint null,
 	wikidata_id varchar(10) null,
 	wikipedia_url varchar(800) null,
-	image_url varchar(800) null,
-	thumbnail_url varchar(1200) null,
+	image_url varchar(650) null,
+	thumbnail_url varchar(650) null,
 	updated_date date null,
 	created_date datetime2 null
 )
@@ -140,8 +141,9 @@ insert into institution with(tablock)
 select a.institution_id,
 	b.display_name,
 	c.institution_type_id,
+	d.institution_status_id,
 	b.country_code,
-	d.region_id,
+	e.region_id,
 	b.geo_geonames_city_id,
 	b.geo_latitude,
 	b.geo_longitude,
@@ -150,7 +152,6 @@ select a.institution_id,
 	ror_id = replace(b.id_ror, 'https://ror.org/', ''),
 	grid_id = case when len(b.id_grid) <= 13 then b.id_grid else null end,
 	openalex_id = 'I' + cast(a.institution_id as varchar(10)),
-	mag_id = b.id_mag,
 	wikidata_id = replace(b.id_wikidata, 'https://www.wikidata.org/wiki/', ''),
 	wikipedia_url = b.id_wikipedia,
 	b.image_url,
@@ -160,7 +161,8 @@ select a.institution_id,
 from _institution as a
 join $(institutions_json_db_name)..institution as b on a.folder = b.folder and a.record_id = b.record_id
 left join institution_type as c on b.[type] = c.institution_type
-left join region as d on b.geo_region = d.region
+left join institution_status as d on b.[status] = d.institution_status
+left join region as e on b.geo_region = e.region
 
 update a with(tablock)
 set a.country_iso_alpha2_code = b.country_code
@@ -226,18 +228,81 @@ where b.institution_id is null
 alter table institution add constraint pk_institution primary key(institution_id)
 create index idx_institution_institution on institution(institution)
 create index idx_institution_institution_type_id on institution(institution_type_id)
+create index idx_institution_institution_status_id on institution(institution_status_id)
 create index idx_institution_country_iso_alpha2_code on institution(country_iso_alpha2_code)
 create index idx_institution_region_id on institution(region_id)
 create index idx_institution_geonames_city_id on institution(geonames_city_id)
 create index idx_institution_ror_id on institution(ror_id)
 create index idx_institution_grid_id on institution(grid_id)
 create index idx_institution_openalex_id on institution(openalex_id)
-create index idx_institution_mag_id on institution(mag_id)
 create index idx_institution_wikidata_id on institution(wikidata_id)
 alter table institution add constraint fk_institution_institution_type_id_institution_type_institution_type_id foreign key(institution_type_id) references institution_type(institution_type_id)
+alter table institution add constraint fk_institution_institution_status_id_institution_status_institution_status_id foreign key(institution_status_id) references institution_status(institution_status_id)
 alter table institution add constraint fk_institution_country_iso_alpha2_code_country_country_iso_alpha2_code foreign key(country_iso_alpha2_code) references country(country_iso_alpha2_code)
 alter table institution add constraint fk_institution_region_id_region_region_id foreign key(region_id) references region(region_id)
 alter table institution add constraint fk_institution_geonames_city_id_city_geonames_city_id foreign key(geonames_city_id) references city(geonames_city_id)
+
+
+
+-- institution_role
+drop table if exists institution_role
+create table institution_role
+(
+	institution_role_id tinyint not null identity(1, 1),
+	institution_role varchar(20) not null
+)
+go
+
+if exists (select * from master.dbo.sysdatabases where name = '$(previous_relational_db_name)')
+begin
+	if exists (select * from $(previous_relational_db_name).sys.tables where [name] = 'institution_role')
+	begin
+		set identity_insert institution_role on
+
+		insert into institution_role with(tablock) (institution_role_id, institution_role)
+		select institution_role_id, institution_role
+		from $(previous_relational_db_name)..institution_role
+
+		set identity_insert institution_role off
+	end
+end
+
+insert into institution_role with(tablock)
+select institution_role = [role]
+from $(institutions_json_db_name)..institution_role
+where [role] is not null
+except
+select institution_role
+from institution_role
+order by institution_role
+
+alter table institution_role add constraint pk_institution_role primary key(institution_role_id)
+create index idx_institution_role_institution_role on institution_role(institution_role)
+
+
+-- institution_institution_role
+drop table if exists institution_institution_role
+create table institution_institution_role
+(
+	institution_id bigint not null,
+	institution_role_seq smallint not null,
+	institution_role_id tinyint not null
+)
+go
+
+insert into institution_institution_role with(tablock)
+select a.institution_id,
+	institution_role_seq = b.role_seq,
+	c.institution_role_id
+from _institution as a
+join $(institutions_json_db_name)..institution_role as b on a.folder = b.folder and a.record_id = b.record_id
+join institution_role as c on b.[role] = c.institution_role
+
+alter table institution_institution_role add constraint pk_institution_institution_role primary key(institution_id, institution_role_seq)
+create index idx_institution_institution_role_repository_source_id on institution_institution_role(institution_role_id)
+alter table institution_institution_role add constraint fk_institution_institution_role_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)
+alter table institution_institution_role add constraint fk_institution_institution_role_institution_role_id_institution_role_institution_role_id foreign key(institution_role_id) references institution_role(institution_role_id)
+
 
 
 
@@ -356,29 +421,6 @@ alter table institution_alternative_name add constraint fk_institution_alternati
 
 
 
--- institution_international_name
-drop table if exists institution_international_name
-create table institution_international_name
-(
-	institution_id bigint not null,
-	language_code varchar(16) not null,
-	institution_international_name nvarchar(200) not null
-)
-go
-
-insert into institution_international_name with(tablock)
-select a.institution_id,
-	b.international_display_name,
-	b.display_name
-from _institution as a
-join $(institutions_json_db_name)..institution_international_display_name as b on a.folder = b.folder and a.record_id = b.record_id
-where b.display_name is not null
-
-alter table institution_international_name add constraint pk_institution_international_name primary key(institution_id, language_code)
-alter table institution_international_name add constraint fk_institution_international_name_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)
-
-
-
 -- institution_repository
 drop table if exists institution_repository
 create table institution_repository
@@ -399,6 +441,7 @@ join $(institutions_json_db_name)..institution_repository as b on a.folder = b.f
 alter table institution_repository add constraint pk_institution_repository primary key(institution_id, repository_seq)
 create index idx_institution_repository_repository_source_id on institution_repository(repository_source_id)
 alter table institution_repository add constraint fk_institution_repository_institution_id_institution_institution_id foreign key(institution_id) references institution(institution_id)
+alter table institution_repository add constraint fk_institution_repository_repository_source_id_source_source_id foreign key(repository_source_id) references [source](source_id)
 
 
 
@@ -472,6 +515,7 @@ select a.author_id,
 	b.[year]
 from _author as a
 join $(authors_json_db_name)..author_affiliation_year as b on a.folder = b.folder and a.record_id = b.record_id
+where b.[year] < 2100
 
 alter table author_institution_year add constraint pk_author_institution_year primary key(author_id, institution_seq, year_seq)
 alter table author_institution_year add constraint fk_author_institution_year_author_id_author_author_id foreign key(author_id) references author(author_id)
@@ -491,10 +535,10 @@ go
 
 insert into author_last_known_institution with(tablock)
 select a.author_id,
-	last_known_institution_seq = b.affiliation_seq,
-	last_known_institution_id = replace(b.institution_id, 'https://openalex.org/I', '')
+	last_known_institution_seq = b.last_known_institution_seq,
+	last_known_institution_id = replace(b.id, 'https://openalex.org/I', '')
 from _author as a
-join $(authors_json_db_name)..author_affiliation as b on a.folder = b.folder and a.record_id = b.record_id
+join $(authors_json_db_name)..author_last_known_institution as b on a.folder = b.folder and a.record_id = b.record_id
 
 alter table author_last_known_institution add constraint pk_author_last_known_institution primary key(author_id, last_known_institution_seq)
 alter table author_last_known_institution add constraint fk_author_last_known_institution_author_id_author_author_id foreign key(author_id) references author(author_id)

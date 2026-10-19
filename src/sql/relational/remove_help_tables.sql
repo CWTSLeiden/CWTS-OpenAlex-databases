@@ -1,11 +1,15 @@
 set nocount on
 
 drop table if exists _author
+drop table if exists _award
 drop table if exists _concept
+drop table if exists _continent
+drop table if exists _country
 drop table if exists _domain
 drop table if exists _field
 drop table if exists _funder
 drop table if exists _institution
+drop table if exists _language
 drop table if exists _publisher
 drop table if exists _source
 drop table if exists _subfield

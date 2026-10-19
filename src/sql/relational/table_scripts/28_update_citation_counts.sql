@@ -2,12 +2,14 @@ set nocount on
 
 -- Count citations.
 drop table if exists #work_n_cits
-select work_id = cited_work_id, 
+select work_id = a.cited_work_id, 
 	n_cits = count(*),
-	n_self_cits = sum(case when is_self_cit = 1 then 1 else 0 end)
+	n_self_cits = sum(case when a.is_self_cit = 1 then 1 else 0 end)
 into #work_n_cits
-from citation
-group by cited_work_id
+from citation as a
+join work as b on a.citing_work_id = b.work_id
+where b.work_type_id not in (7, 41)  -- Exclude datasets and software.
+group by a.cited_work_id
 
 alter table #work_n_cits add constraint pk_tmp_work_n_cits primary key(work_id)
 
