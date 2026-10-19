@@ -4,11 +4,11 @@ _file_information	record_id	smallint	5
 topic	folder	char	6
 topic	record_id	smallint	5
 topic	cited_by_count	int	10
-topic	created_date	datetime	23
+topic	created_date	char	24
 topic	description	nvarchar	828
 topic	display_name	nvarchar	83
 topic	id	char	27
-topic	updated_date	char	26
+topic	updated_date	char	24
 topic	works_count	int	10
 topic	domain_id	char	30
 topic	field_id	char	30

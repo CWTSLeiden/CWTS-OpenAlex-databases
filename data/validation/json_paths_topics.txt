@@ -14,7 +14,6 @@ siblings[seq].display_name
 siblings[seq].id
 subfield.display_name
 subfield.id
-updated
 updated_date
 works_api_url
 works_count

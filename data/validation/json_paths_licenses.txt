@@ -1,0 +1,9 @@
+cited_by_count
+created_date
+description
+display_name
+id
+updated_date
+url
+works_api_url
+works_count

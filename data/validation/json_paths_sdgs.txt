@@ -1,0 +1,13 @@
+cited_by_count
+created_date
+description
+display_name
+id
+ids.openalex
+ids.un
+ids.wikidata
+image_thumbnail_url
+image_url
+updated_date
+works_api_url
+works_count
