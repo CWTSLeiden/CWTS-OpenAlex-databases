@@ -116,17 +116,49 @@ create index idx_tmp_pub_gcd_work_id on #pub_gcd(work_id)
 drop table if exists #pub
 select a.work_id,
 	work_no = row_number() over (order by a.work_id),
+	a.work_type_id,
 	doc_type_no =
 		case
-			when a.work_type_id in (26, 34) /* article, review */ and b.source_type_id = 3 /* journal */ then 2  -- Journal article / journal review / book chapter in book series.
-			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id = 5 /* book series */ then 2  -- Journal article / journal review / book chapter in book series.
-			when a.work_type_id in (2, 26, 34) /* book-chapter, article, review */ and b.source_type_id in (1, 2) /* conference, ebook platform */ then 4  -- Conference paper / book chapter in book.
-			when a.work_type_id = 2 /* book-chapter */ and b.source_type_id = 3 /* journal */ then 4  -- Conference paper / book chapter in book.
+			when a.work_type_id in (2, 26, 34, 40, 42) /* book-chapter, article, review, data-paper, software-paper */
+					and b.source_type_id = 3 /* journal */
+				then 2  -- Journal paper / book chapter in book series.
+			when a.work_type_id in (2, 26, 34, 39, 40, 42) /* book-chapter, article, review, conference-paper, data-paper, software-paper */
+					and b.source_type_id = 5 /* book series */
+				then 2  -- Journal paper / book chapter in book series.
+			when a.work_type_id in (2, 26, 34, 39, 40, 42) /* book-chapter, article, review, conference-paper, data-paper, software-paper */
+					and b.source_type_id in (1, 2) /* conference, ebook platform */
+				then 4  -- Conference paper / book chapter in book.
+			when a.work_type_id = 39 /* conference-paper */
+					and b.source_type_id = 3 /* journal */
+				then 4  -- Conference paper / book chapter in book.
 			else 1  -- Non-citable work.
 		end,
 	a.source_id,
 	a.pub_year,
-	has_required_metadata = cast(case when a.source_id is not null and isnull(d.n_authors, 0) > 0 and isnull(e.n_affiliations, 0) > 0 and a.n_refs > 0 then 1 else 0 end as bit),
+	a.is_retracted,
+	has_cwts_required_metadata = cast(
+		case
+			when a.pub_year is not null
+					and a.source_id is not null
+					and isnull(d.n_authors, 0) > 0
+					and isnull(e.n_affiliations, 0) > 0
+					and a.n_refs > 0
+				then 1
+			else 0
+		end as bit),
+	is_cwts_extended_pub = cast(
+		case
+			when a.pub_year is not null
+					and a.source_id is not null
+					and isnull(d.n_authors, 0) > 0
+					and isnull(e.n_affiliations, 0) > 0
+					and a.n_refs > 0
+				and a.work_type_id in (2, 26, 34, 39, 40, 42) /* book-chapter, article, review, conference-paper, data-paper, software-paper */
+					and b.source_type_id in (1, 2, 3, 5) /* conference, ebook platform, journal, book series */
+				then 1
+			else 0
+		end as bit),
+	c.is_cwts_core_pub,
 	n_authors = isnull(d.n_authors, 1),
 	n_institutions = isnull(f.n_institutions, 1),
 	n_countries = isnull(g.n_countries, 1),
@@ -141,6 +173,7 @@ select a.work_id,
 into #pub
 from $(relational_db_name)..work as a
 left join $(relational_db_name)..[source] as b on a.source_id = b.source_id
+left join $(core_db_name)..work as c on a.work_id = c.work_id
 left join #pub_n_authors as d on a.work_id = d.work_id
 left join #pub_n_affiliations as e on a.work_id = e.work_id
 left join #pub_n_institutions as f on a.work_id = f.work_id
@@ -148,8 +181,6 @@ left join #pub_n_countries as g on a.work_id = g.work_id
 left join #pub_industry as h on a.work_id = h.work_id
 left join #pub_gcd as i on a.work_id = i.work_id
 left join #pub_oa as j on a.work_id = j.work_id
-where a.pub_year >= $(indicators_min_pub_year)
-	and a.is_retracted = 0
 
 
 drop table if exists pub
@@ -159,6 +190,8 @@ create table pub
 	doc_type_no tinyint not null,
 	source_id bigint null,
 	pub_year smallint not null,
+	is_cwts_extended_pub bit not null,
+	is_cwts_core_pub bit not null,
 	n_authors smallint not null,
 	n_institutions smallint not null,
 	n_countries smallint not null,
@@ -178,6 +211,8 @@ select work_id,
 	doc_type_no,
 	source_id,
 	pub_year,
+	is_cwts_extended_pub,
+	is_cwts_core_pub,
 	n_authors,
 	n_institutions,
 	n_countries,
@@ -196,32 +231,38 @@ select work_id,
 	is_green_oa,
 	is_oa_unknown
 from #pub
-where has_required_metadata = 1
+where pub_year >= $(indicators_min_pub_year)
+	and work_type_id not in (7, 41)  -- Exclude datasets and software.
+	and has_cwts_required_metadata = 1
+	and is_retracted = 0
 
 alter table pub add constraint pk_pub primary key(work_id)
 create index idx_pub_doc_type_no on pub(doc_type_no)
 create index idx_pub_source_no on pub(source_id)
 create index idx_pub_pub_year on pub(pub_year)
+create index idx_pub_is_cwts_extended_pub on pub(is_cwts_extended_pub)
+create index idx_pub_is_cwts_core_pub on pub(is_cwts_core_pub)
 
 
 drop table if exists [source]
 create table [source]
 (
 	source_id bigint not null,
-	is_core_source bit not null
+	is_cwts_core_source bit not null
 )
 
 insert [source] with(tablock)
-select a.source_id, is_core_source = isnull(a.is_core_source, 0)
+select a.source_id, is_cwts_core_source = isnull(a.is_cwts_core_source, 0)
 from $(core_db_name)..[source] as a
 join
 (
 	select distinct source_id
-	from #pub
+	from pub
 	where source_id is not null
 ) as b on a.source_id = b.source_id
 
 alter table [source] add constraint pk_source primary key(source_id)
+create index idx_source_is_cwts_core_source on [source](is_cwts_core_source)
 
 
 drop table if exists #pub_database
@@ -229,10 +270,13 @@ select work_id, database_no = 1
 into #pub_database
 from pub
 union
-select a.work_id, database_no = 2
-from pub as a
-join $(core_db_name)..work as b on a.work_id = b.work_id
-where b.is_core_work = 1
+select work_id, database_no = 2
+from pub
+where is_cwts_extended_pub = 1
+union
+select work_id, database_no = 3
+from pub
+where is_cwts_core_pub = 1
 
 
 drop table if exists pub_database
@@ -270,3 +314,15 @@ left join
 	and b.database_no = c.database_no
 
 alter table pub_database add constraint pk_pub_database primary key(work_id, database_no)
+
+
+update a with(tablock)
+set a.has_cwts_required_metadata = b.has_cwts_required_metadata, a.is_cwts_extended_pub = b.is_cwts_extended_pub, a.is_cwts_core_pub = b.is_cwts_core_pub
+from $(relational_db_name)..work as a
+join #pub as b on a.work_id = b.work_id
+
+
+update a with(tablock)
+set a.is_cwts_core_source = b.is_cwts_core_source
+from $(relational_db_name)..[source] as a
+join $(core_db_name)..[source] as b on a.source_id = b.source_id

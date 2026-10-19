@@ -26,7 +26,8 @@ create table [database]
 
 insert [database] values
 (1, 'All publications (with required meta-data)'),
-(2, 'Core publications')
+(2, 'Extended publications'),
+(3, 'Core publications')
 
 alter table [database] add constraint pk_database primary key(database_no)
 

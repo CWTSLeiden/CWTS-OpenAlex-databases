@@ -44,7 +44,7 @@ select a.work_id,
 	a.source_id,
 	b.source_type_id,
 	a.pub_year,
-	a.language_iso2_code,
+	a.language_iso_alpha2_code,
 	n_authors = isnull(c.n_authors, 0),
 	n_affiliations = isnull(d.n_affiliations, 0),
 	n_countries = isnull(e.n_countries, 0),
@@ -73,12 +73,12 @@ join $(relational_db_name)..work_type as b on a.work_type_id = b.work_type_id
 join $(relational_db_name)..source_type as c on a.source_type_id = c.source_type_id
 where
 	(
-		b.work_type in ('article', 'review')
+		b.work_type in ('article', 'review', 'book-chapter', 'data-paper', 'software-paper')
 			and c.source_type = 'journal'
 	)
 	or
 	(
-		b.work_type in ('book-chapter', 'article', 'review')
+		b.work_type in ('book-chapter', 'conference-paper', 'article', 'review', 'data-paper', 'software-paper')
 			and c.source_type = 'book series'
 	)
 
@@ -89,7 +89,7 @@ drop table if exists #work_step2
 select *
 into #work_step2
 from #work_step1
-where language_iso2_code = 'en'
+where language_iso_alpha2_code = 'en'
 
 
 -- Step 3: Exclude works that do not have any authors.
@@ -275,27 +275,27 @@ drop table if exists work
 create table work
 (
 	work_id bigint not null,
-	is_core_work bit null
+	is_cwts_core_pub bit null
 )
 
 insert into work with(tablock)
-select a.work_id, is_core_work = case when b.work_id is not null then 1 when a.pub_year >= $(core_min_pub_year_core_pubs) then 0 else null end
+select a.work_id, is_cwts_core_pub = case when b.work_id is not null then 1 when a.pub_year >= $(core_min_pub_year_core_pubs) then 0 else null end
 from $(relational_db_name)..work as a
 left join #work_step7 as b on a.work_id = b.work_id
 
 alter table work add constraint pk_work primary key(work_id)
-create index idx_work_is_core_work on work(is_core_work)
+create index idx_work_is_cwts_core_pub on work(is_cwts_core_pub)
 
 
 drop table if exists [source]
 create table [source]
 (
 	source_id bigint not null,
-	is_core_source bit null
+	is_cwts_core_source bit null
 )
 
 insert into [source] with(tablock)
-select a.source_id, is_core_source = case when b.source_id is not null then 1 when c.source_id is not null then 0 else null end
+select a.source_id, is_cwts_core_source = case when b.source_id is not null then 1 when c.source_id is not null then 0 else null end
 from $(relational_db_name)..[source] as a
 left join #source_step7 as b on a.source_id = b.source_id
 left join
@@ -306,4 +306,4 @@ left join
 ) as c on a.source_id = c.source_id
 
 alter table [source] add constraint pk_source primary key(source_id)
-create index idx_source_is_core_source on [source](is_core_source)
+create index idx_source_is_cwts_core_source on [source](is_cwts_core_source)
