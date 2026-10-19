@@ -58,6 +58,8 @@ set etl_db_name=cwtsdb_etl
 set dba_db_name=cwtsdb_dba
 set geonames_db_name=geonames_2026aug
 set ror_db_name=ror_2026aug
+set crossref_db_name=crossref_2026jan
+set pubmed_db_name=pubmed_2026
 
 set previous_text_db_name=openalex_%previous_db_version%_text
 
