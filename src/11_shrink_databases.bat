@@ -28,16 +28,26 @@ goto:eof
 echo Choose databases to shrink (names or numbers [space] separated)
 echo Option 0: all
 echo Option 1: %authors_json_db_name%
+echo           %awards_json_db_name%
 echo           %concepts_json_db_name%
+echo           %continents_json_db_name%
+echo           %countries_json_db_name%
 echo           %domains_json_db_name%
 echo           %fields_json_db_name%
 echo           %funders_json_db_name%
 echo           %institutions_json_db_name%
+echo           %institutiontypes_json_db_name%
+echo           %keywords_json_db_name%
+echo           %languages_json_db_name%
+echo           %licenses_json_db_name%
 echo           %publishers_json_db_name%
+echo           %sdgs_json_db_name%
 echo           %sources_json_db_name%
+echo           %sourcetypes_json_db_name%
 echo           %subfields_json_db_name%
 echo           %topics_json_db_name%
 echo           %works_json_db_name%
+echo           %worktypes_json_db_name%
 echo Option 2: %relational_db_name%
 echo Option 3: %text_db_name%
 echo Option 4: %classification_db_name%
@@ -88,8 +98,20 @@ call %functions%\shrink_database.bat ^
     %json_sql_log_folder%\authors
 
 call %functions%\shrink_database.bat ^
+    %awards_json_db_name% ^
+    %json_sql_log_folder%\awards
+
+call %functions%\shrink_database.bat ^
     %concepts_json_db_name% ^
     %json_sql_log_folder%\concepts
+
+call %functions%\shrink_database.bat ^
+    %continents_json_db_name% ^
+    %json_sql_log_folder%\continents
+	
+call %functions%\shrink_database.bat ^
+    %countries_json_db_name% ^
+    %json_sql_log_folder%\countries
 
 call %functions%\shrink_database.bat ^
     %domains_json_db_name% ^
@@ -108,12 +130,36 @@ call %functions%\shrink_database.bat ^
     %json_sql_log_folder%\institutions
 
 call %functions%\shrink_database.bat ^
+    %institutiontypes_json_db_name% ^
+    %json_sql_log_folder%\institution-types
+
+call %functions%\shrink_database.bat ^
+    %keywords_json_db_name% ^
+    %json_sql_log_folder%\keywords
+	
+call %functions%\shrink_database.bat ^
+    %languages_json_db_name% ^
+    %json_sql_log_folder%\languages
+
+call %functions%\shrink_database.bat ^
+    %licenses_json_db_name% ^
+    %json_sql_log_folder%\licenses
+
+call %functions%\shrink_database.bat ^
     %publishers_json_db_name% ^
     %json_sql_log_folder%\publishers
 
 call %functions%\shrink_database.bat ^
+    %sdgs_json_db_name% ^
+    %json_sql_log_folder%\sdgs
+
+call %functions%\shrink_database.bat ^
     %sources_json_db_name% ^
     %json_sql_log_folder%\sources
+
+call %functions%\shrink_database.bat ^
+    %sourcetypes_json_db_name% ^
+    %json_sql_log_folder%\source-types
 
 call %functions%\shrink_database.bat ^
     %subfields_json_db_name% ^
@@ -126,6 +172,10 @@ call %functions%\shrink_database.bat ^
 call %functions%\shrink_database.bat ^
     %works_json_db_name% ^
     %json_sql_log_folder%\works
+
+call %functions%\shrink_database.bat ^
+    %worktypes_json_db_name% ^
+    %json_sql_log_folder%\work-types
 
 call %functions%\notify.bat "%json_db_name%" "%~n0" ""
 goto:eof

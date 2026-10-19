@@ -11,6 +11,35 @@ call settings.bat
 ::: while the main window waits for all processes to finish.
 :: =======================================================================================
 
+:: AWARDS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %awards_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\awards
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %awards_json_db_name% ^
+    %process_folder%\awards\create_tables.sql ^
+    %json_sql_log_folder%\awards ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %awards_json_db_name% ^
+    %json_sql_log_folder%\awards
+
+call %functions%\bcp_data.bat ^
+    %awards_json_db_name% ^
+    %process_folder%\awards ^
+    %bcp_log_folder%\awards
+
+call %functions%\validate_database.bat   %awards_json_db_name%
+call %functions%\validate_data_types.bat %awards_json_db_name%
+
 :: CONCEPTS ------------------------------------------------------------------------------
 
 set db_filegrowth=1GB
@@ -39,6 +68,65 @@ call %functions%\bcp_data.bat ^
 
 call %functions%\validate_database.bat   %concepts_json_db_name%
 call %functions%\validate_data_types.bat %concepts_json_db_name%
+
+
+:: CONTINENTS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %continents_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\continents
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %continents_json_db_name% ^
+    %process_folder%\continents\create_tables.sql ^
+    %json_sql_log_folder%\continents ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %continents_json_db_name% ^
+    %json_sql_log_folder%\continents
+
+call %functions%\bcp_data.bat ^
+    %continents_json_db_name% ^
+    %process_folder%\continents ^
+    %bcp_log_folder%\continents
+
+call %functions%\validate_database.bat   %continents_json_db_name%
+call %functions%\validate_data_types.bat %continents_json_db_name%
+
+:: COUNTRIES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %countries_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\countries
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %countries_json_db_name% ^
+    %process_folder%\countries\create_tables.sql ^
+    %json_sql_log_folder%\countries ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %countries_json_db_name% ^
+    %json_sql_log_folder%\countries
+
+call %functions%\bcp_data.bat ^
+    %countries_json_db_name% ^
+    %process_folder%\countries ^
+    %bcp_log_folder%\countries
+
+call %functions%\validate_database.bat   %countries_json_db_name%
+call %functions%\validate_data_types.bat %countries_json_db_name%
 
 :: DOMAINS ------------------------------------------------------------------------------
 
@@ -127,35 +215,6 @@ call %functions%\bcp_data.bat ^
 call %functions%\validate_database.bat   %funders_json_db_name%
 call %functions%\validate_data_types.bat %funders_json_db_name%
 
-:: PUBLISHERS ------------------------------------------------------------------------------
-
-set db_filegrowth=1GB
-call %functions%\create_database.bat ^
-    %publishers_json_db_name% ^
-    %json_sql_src_folder% ^
-    %json_sql_log_folder%\publishers
-call %functions%\check_errors.bat
-set "db_filegrowth="
-
-call %functions%\run_sql_script.bat ^
-    %publishers_json_db_name% ^
-    %process_folder%\publishers\create_tables.sql ^
-    %json_sql_log_folder%\publishers ^
-    ""
-call %functions%\check_errors.bat
-
-call %functions%\apply_page_compression.bat ^
-    %publishers_json_db_name% ^
-    %json_sql_log_folder%\publishers
-
-call %functions%\bcp_data.bat ^
-    %publishers_json_db_name% ^
-    %process_folder%\publishers ^
-    %bcp_log_folder%\publishers
-
-call %functions%\validate_database.bat   %publishers_json_db_name%
-call %functions%\validate_data_types.bat %publishers_json_db_name%
-
 :: INSTITUTIONS ------------------------------------------------------------------------------
 
 set db_filegrowth=1GB
@@ -185,6 +244,180 @@ call %functions%\bcp_data.bat ^
 call %functions%\validate_database.bat   %institutions_json_db_name%
 call %functions%\validate_data_types.bat %institutions_json_db_name%
 
+:: INSTITUTION-TYPES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %institutiontypes_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\institution-types
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %institutiontypes_json_db_name% ^
+    %process_folder%\institution-types\create_tables.sql ^
+    %json_sql_log_folder%\institution-types ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %institutiontypes_json_db_name% ^
+    %json_sql_log_folder%\institution-types
+
+call %functions%\bcp_data.bat ^
+    %institutiontypes_json_db_name% ^
+    %process_folder%\institution-types ^
+    %bcp_log_folder%\institution-types
+
+call %functions%\validate_database.bat   %institutiontypes_json_db_name%
+call %functions%\validate_data_types.bat %institutiontypes_json_db_name%
+
+:: KEYWORDS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %keywords_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\keywords
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %keywords_json_db_name% ^
+    %process_folder%\keywords\create_tables.sql ^
+    %json_sql_log_folder%\keywords ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %keywords_json_db_name% ^
+    %json_sql_log_folder%\keywords
+
+call %functions%\bcp_data.bat ^
+    %keywords_json_db_name% ^
+    %process_folder%\keywords ^
+    %bcp_log_folder%\keywords
+
+call %functions%\validate_database.bat   %keywords_json_db_name%
+call %functions%\validate_data_types.bat %keywords_json_db_name%
+
+:: LANGUAGES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %languages_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\languages
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %languages_json_db_name% ^
+    %process_folder%\languages\create_tables.sql ^
+    %json_sql_log_folder%\languages ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %languages_json_db_name% ^
+    %json_sql_log_folder%\languages
+
+call %functions%\bcp_data.bat ^
+    %languages_json_db_name% ^
+    %process_folder%\languages ^
+    %bcp_log_folder%\languages
+
+call %functions%\validate_database.bat   %languages_json_db_name%
+call %functions%\validate_data_types.bat %languages_json_db_name%
+
+:: LICENSES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %licenses_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\licenses
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %licenses_json_db_name% ^
+    %process_folder%\licenses\create_tables.sql ^
+    %json_sql_log_folder%\licenses ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %licenses_json_db_name% ^
+    %json_sql_log_folder%\licenses
+
+call %functions%\bcp_data.bat ^
+    %licenses_json_db_name% ^
+    %process_folder%\licenses ^
+    %bcp_log_folder%\licenses
+
+call %functions%\validate_database.bat   %licenses_json_db_name%
+call %functions%\validate_data_types.bat %licenses_json_db_name%
+
+:: PUBLISHERS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %publishers_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\publishers
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %publishers_json_db_name% ^
+    %process_folder%\publishers\create_tables.sql ^
+    %json_sql_log_folder%\publishers ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %publishers_json_db_name% ^
+    %json_sql_log_folder%\publishers
+
+call %functions%\bcp_data.bat ^
+    %publishers_json_db_name% ^
+    %process_folder%\publishers ^
+    %bcp_log_folder%\publishers
+
+call %functions%\validate_database.bat   %publishers_json_db_name%
+call %functions%\validate_data_types.bat %publishers_json_db_name%
+
+:: SDGS ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %sdgs_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\sdgs
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %sdgs_json_db_name% ^
+    %process_folder%\sdgs\create_tables.sql ^
+    %json_sql_log_folder%\sdgs ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %sdgs_json_db_name% ^
+    %json_sql_log_folder%\sdgs
+
+call %functions%\bcp_data.bat ^
+    %sdgs_json_db_name% ^
+    %process_folder%\sdgs ^
+    %bcp_log_folder%\sdgs
+
+call %functions%\validate_database.bat   %sdgs_json_db_name%
+call %functions%\validate_data_types.bat %sdgs_json_db_name%
+
 :: SOURCES ------------------------------------------------------------------------------
 
 set db_filegrowth=1GB
@@ -213,6 +446,35 @@ call %functions%\bcp_data.bat ^
 
 call %functions%\validate_database.bat   %sources_json_db_name%
 call %functions%\validate_data_types.bat %sources_json_db_name%
+
+:: SOURCE-TYPES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %sourcetypes_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\source-types
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %sourcetypes_json_db_name% ^
+    %process_folder%\source-types\create_tables.sql ^
+    %json_sql_log_folder%\source-types ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %sourcetypes_json_db_name% ^
+    %json_sql_log_folder%\source-types
+
+call %functions%\bcp_data.bat ^
+    %sourcetypes_json_db_name% ^
+    %process_folder%\source-types ^
+    %bcp_log_folder%\source-types
+
+call %functions%\validate_database.bat   %sourcetypes_json_db_name%
+call %functions%\validate_data_types.bat %sourcetypes_json_db_name%
 
 :: SUBFIELDS ------------------------------------------------------------------------------
 
@@ -271,6 +533,35 @@ call %functions%\bcp_data.bat ^
 
 call %functions%\validate_database.bat   %topics_json_db_name%
 call %functions%\validate_data_types.bat %topics_json_db_name%
+
+:: WORK-TYPES ------------------------------------------------------------------------------
+
+set db_filegrowth=1GB
+call %functions%\create_database.bat ^
+    %worktypes_json_db_name% ^
+    %json_sql_src_folder% ^
+    %json_sql_log_folder%\work-types
+call %functions%\check_errors.bat
+set "db_filegrowth="
+
+call %functions%\run_sql_script.bat ^
+    %worktypes_json_db_name% ^
+    %process_folder%\work-types\create_tables.sql ^
+    %json_sql_log_folder%\work-types ^
+    ""
+call %functions%\check_errors.bat
+
+call %functions%\apply_page_compression.bat ^
+    %worktypes_json_db_name% ^
+    %json_sql_log_folder%\work-types
+
+call %functions%\bcp_data.bat ^
+    %worktypes_json_db_name% ^
+    %process_folder%\work-types ^
+    %bcp_log_folder%\work-types
+
+call %functions%\validate_database.bat   %worktypes_json_db_name%
+call %functions%\validate_data_types.bat %worktypes_json_db_name%
 
 :: AUTHORS ------------------------------------------------------------------------------
 

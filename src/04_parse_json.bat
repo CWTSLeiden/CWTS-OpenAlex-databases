@@ -12,12 +12,39 @@ call settings.bat
 :: =======================================================================================
 
 call %functions%\json_parse_data.bat ^
+    %awards_json_db_name% ^
+    openalexawards ^
+    %process_folder%\awards ^
+    %extract_json_files_data_folder%\awards ^
+    %generated_sql_scripts_data_folder%\awards ^
+    %json_parser_log_folder%\awards ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
     %concepts_json_db_name% ^
     openalexconcepts ^
     %process_folder%\concepts ^
     %extract_json_files_data_folder%\concepts ^
     %generated_sql_scripts_data_folder%\concepts ^
     %json_parser_log_folder%\concepts ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %continents_json_db_name% ^
+    openalexcontinents ^
+    %process_folder%\continents ^
+    %extract_json_files_data_folder%\continents ^
+    %generated_sql_scripts_data_folder%\continents ^
+    %json_parser_log_folder%\continents ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %countries_json_db_name% ^
+    openalexcountries ^
+    %process_folder%\countries ^
+    %extract_json_files_data_folder%\countries ^
+    %generated_sql_scripts_data_folder%\countries ^
+    %json_parser_log_folder%\countries ^
     erase_previous
 
 call %functions%\json_parse_data.bat ^
@@ -57,6 +84,42 @@ call %functions%\json_parse_data.bat ^
     erase_previous
 
 call %functions%\json_parse_data.bat ^
+    %institutiontypes_json_db_name% ^
+    openalexinstitutiontypes ^
+    %process_folder%\institution-types ^
+    %extract_json_files_data_folder%\institution-types ^
+    %generated_sql_scripts_data_folder%\institution-types ^
+    %json_parser_log_folder%\institution-types ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %keywords_json_db_name% ^
+    openalexkeywords ^
+    %process_folder%\keywords ^
+    %extract_json_files_data_folder%\keywords ^
+    %generated_sql_scripts_data_folder%\keywords ^
+    %json_parser_log_folder%\keywords ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %languages_json_db_name% ^
+    openalexlanguages ^
+    %process_folder%\languages ^
+    %extract_json_files_data_folder%\languages ^
+    %generated_sql_scripts_data_folder%\languages ^
+    %json_parser_log_folder%\languages ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %licenses_json_db_name% ^
+    openalexlicenses ^
+    %process_folder%\licenses ^
+    %extract_json_files_data_folder%\licenses ^
+    %generated_sql_scripts_data_folder%\licenses ^
+    %json_parser_log_folder%\licenses ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
     %publishers_json_db_name% ^
     openalexpublishers ^
     %process_folder%\publishers ^
@@ -66,12 +129,30 @@ call %functions%\json_parse_data.bat ^
     erase_previous
 
 call %functions%\json_parse_data.bat ^
+    %sdgs_json_db_name% ^
+    openalexsdgs ^
+    %process_folder%\sdgs ^
+    %extract_json_files_data_folder%\sdgs ^
+    %generated_sql_scripts_data_folder%\sdgs ^
+    %json_parser_log_folder%\sdgs ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
     %sources_json_db_name% ^
     openalexsources ^
     %process_folder%\sources ^
     %extract_json_files_data_folder%\sources ^
     %generated_sql_scripts_data_folder%\sources ^
     %json_parser_log_folder%\sources ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %sourcetypes_json_db_name% ^
+    openalexsourcetypes ^
+    %process_folder%\source-types ^
+    %extract_json_files_data_folder%\source-types ^
+    %generated_sql_scripts_data_folder%\source-types ^
+    %json_parser_log_folder%\source-types ^
     erase_previous
 
 call %functions%\json_parse_data.bat ^
@@ -90,6 +171,15 @@ call %functions%\json_parse_data.bat ^
     %extract_json_files_data_folder%\topics ^
     %generated_sql_scripts_data_folder%\topics ^
     %json_parser_log_folder%\topics ^
+    erase_previous
+
+call %functions%\json_parse_data.bat ^
+    %worktypes_json_db_name% ^
+    openalexworktypes ^
+    %process_folder%\work-types ^
+    %extract_json_files_data_folder%\work-types ^
+    %generated_sql_scripts_data_folder%\work-types ^
+    %json_parser_log_folder%\work-types ^
     erase_previous
 
 for /L %%i in (1,1,%number_of_processes%) do (
