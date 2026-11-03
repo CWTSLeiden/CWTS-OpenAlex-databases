@@ -27,12 +27,18 @@ set output_file=%validation_data_folder%\%dataset%_bigquery_row_count_tables.tsv
 set "query=select concat(table_id, '\t', cast(row_count as STRING)) from `%bigquery_project%.%dataset%.__TABLES__`"
 
 echo Validate %bigquery_project%:%dataset%
+
+call %gcloud_exe% auth activate-service-account ^
+    --key-file=%bigquery_service_account_key%
+
 call %bq_exe% query ^
+    --project_id=%bigquery_project% ^
     --format=csv ^
+    --max_rows=10000 ^
     %query% ^
     1> %output_file%.tmp
 
-call %powershell_exe% "Get-Content %output_file%.tmp | select-object -skip 1 | Out-File %output_file%"
+call %powershell_exe% "Get-Content %output_file%.tmp | select-object -skip 1 | Out-File %output_file%" -Encoding utf8
 del %output_file%.tmp >nul
 
 call %functions%\validate_database.bat %dataset%
