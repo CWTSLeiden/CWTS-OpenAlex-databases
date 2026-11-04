@@ -4,10 +4,10 @@
 :: Pipeline settings
 :: ---------------------------------------------------------------------------------------
 
-set db_version=2025aug
-set previous_db_version=2024aug
+set db_version=2026aug
+set previous_db_version=2025aug
 set db_owner=vuw\%USERNAME%
-set database_drive_letter=H
+set database_drive_letter=J
 
 set notifications=true
 set verbose=true
@@ -32,22 +32,34 @@ set indicators_db_name=openalex_%db_version%_indicators
 :: Raw databases
 set json_db_name=openalex_%db_version%_json
 set authors_json_db_name=openalex_%db_version%_authors_json
+set awards_json_db_name=openalex_%db_version%_awards_json
 set concepts_json_db_name=openalex_%db_version%_concepts_json
+set continents_json_db_name=openalex_%db_version%_continents_json
+set countries_json_db_name=openalex_%db_version%_countries_json
 set domains_json_db_name=openalex_%db_version%_domains_json
 set fields_json_db_name=openalex_%db_version%_fields_json
 set funders_json_db_name=openalex_%db_version%_funders_json
 set institutions_json_db_name=openalex_%db_version%_institutions_json
+set institutiontypes_json_db_name=openalex_%db_version%_institutiontypes_json
+set keywords_json_db_name=openalex_%db_version%_keywords_json
+set languages_json_db_name=openalex_%db_version%_languages_json
+set licenses_json_db_name=openalex_%db_version%_licenses_json
 set publishers_json_db_name=openalex_%db_version%_publishers_json
+set sdgs_json_db_name=openalex_%db_version%_sdgs_json
 set sources_json_db_name=openalex_%db_version%_sources_json
+set sourcetypes_json_db_name=openalex_%db_version%_sourcetypes_json
 set subfields_json_db_name=openalex_%db_version%_subfields_json
 set topics_json_db_name=openalex_%db_version%_topics_json
 set works_json_db_name=openalex_%db_version%_works_json
+set worktypes_json_db_name=openalex_%db_version%_worktypes_json
 
 :: Utility databases
 set etl_db_name=cwtsdb_etl
 set dba_db_name=cwtsdb_dba
-set geonames_db_name=geonames_2025jul
-set ror_db_name=ror_2025aug
+set geonames_db_name=geonames_2026aug
+set ror_db_name=ror_2026aug
+set crossref_db_name=crossref_2026jan
+set pubmed_db_name=pubmed_2026
 
 set previous_text_db_name=openalex_%previous_db_version%_text
 
@@ -58,9 +70,9 @@ set previous_text_db_name=openalex_%previous_db_version%_text
 set previous_classification_db_name=openalex_2023nov_classification
 
 set classification_min_pub_year_extended_pub_set=1980
-set classification_max_pub_year_extended_pub_set=2024
+set classification_max_pub_year_extended_pub_set=2026
 set classification_min_pub_year_core_pub_set=2000
-set classification_max_pub_year_core_pub_set=2024
+set classification_max_pub_year_core_pub_set=2025
 
 :: publicationclassification
 set classification_memory=200G
@@ -93,7 +105,7 @@ set core_min_pub_year_core_pubs=%classification_min_pub_year_core_pub_set%
 :: ---------------------------------------------------------------------------------------
 
 set indicators_min_pub_year=%classification_min_pub_year_core_pub_set%
-set indicators_max_pub_year=2024
+set indicators_max_pub_year=2025
 
 :: ---------------------------------------------------------------------------------------
 :: Terminal Settings

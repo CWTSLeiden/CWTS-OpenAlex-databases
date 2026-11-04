@@ -6,17 +6,27 @@ call settings.bat
 :: Main
 :: =======================================================================================
 
+call :analyze_json_tags %extract_json_files_data_folder%\authors
+call :analyze_json_tags %extract_json_files_data_folder%\awards
 call :analyze_json_tags %extract_json_files_data_folder%\concepts
+call :analyze_json_tags %extract_json_files_data_folder%\continents
+call :analyze_json_tags %extract_json_files_data_folder%\countries
 call :analyze_json_tags %extract_json_files_data_folder%\domains
 call :analyze_json_tags %extract_json_files_data_folder%\fields
 call :analyze_json_tags %extract_json_files_data_folder%\funders
 call :analyze_json_tags %extract_json_files_data_folder%\institutions
+call :analyze_json_tags %extract_json_files_data_folder%\institution-types
+call :analyze_json_tags %extract_json_files_data_folder%\keywords
+call :analyze_json_tags %extract_json_files_data_folder%\languages
+call :analyze_json_tags %extract_json_files_data_folder%\licenses
 call :analyze_json_tags %extract_json_files_data_folder%\publishers
+call :analyze_json_tags %extract_json_files_data_folder%\sdgs
 call :analyze_json_tags %extract_json_files_data_folder%\sources
+call :analyze_json_tags %extract_json_files_data_folder%\source-types
 call :analyze_json_tags %extract_json_files_data_folder%\subfields
 call :analyze_json_tags %extract_json_files_data_folder%\topics
-call :analyze_json_tags %extract_json_files_data_folder%\authors
 call :analyze_json_tags %extract_json_files_data_folder%\works
+call :analyze_json_tags %extract_json_files_data_folder%\work-types
 
 call %functions%\notify.bat "%json_db_name%" "%~n0" ""
 pause

@@ -6,9 +6,9 @@ select
     pub_year = b.pub_year,
     source_id = b.source_id,
     doi = b.doi,
-    is_core_work = cast(a.is_core_work as varchar(10))
+    is_cwts_core_pub = cast(a.is_cwts_core_pub as varchar(10))
 from work as a
 join $(relational_db_name)..work as b on a.work_id = b.work_id
 left join $(relational_db_name)..work_type as c on b.work_type_id = c.work_type_id
-where a.is_core_work is not null
+where a.is_cwts_core_pub is not null
 order by 1

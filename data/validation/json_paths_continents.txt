@@ -1,0 +1,13 @@
+countries[seq].display_name
+countries[seq].id
+created_date
+description
+display_name
+display_name_alternatives[seq]
+id
+ids.openalex
+ids.wikidata
+updated_date
+wikidata_id
+wikidata_url
+wikipedia_url
