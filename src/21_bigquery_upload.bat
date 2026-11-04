@@ -9,7 +9,7 @@ call settings.bat
 call :load_bigquery_folder ^
     %relational_db_name% ^
     %export_data_folder%\relational
-    
+
 call :load_bigquery_folder_descriptions ^
     %relational_db_name% ^
     %export_data_folder%\relational
@@ -58,13 +58,6 @@ call %functions%\load_bigquery_table.bat ^
     %bigquery_project%:%db_name%.%table_name% ^
     %export_folder%\types\%table_name%_types.tsv ^
     %bigquery_log_folder%\%db_name%
-
-if %db_name% == %relational_db_name% (
-    call %functions%\set_bigquery_table_description.bat ^
-        %bigquery_project%:%db_name%.%table_name% ^
-        %doc_folder%\documentation.tsv ^
-        %bigquery_log_folder%\%db_name%
-)
 
 endlocal
 goto:eof
